@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import {
+  Admin,
+  EditGuesser,
+  ListGuesser,
+  Resource,
+  ShowGuesser,
+} from "react-admin";
+import "@fontsource/roboto/300.css";
+
+import modules from "./modules";
+import dataProvider from "./providers/data";
+import authProvider from "./providers/auth";
+import customDataProvider from "./providers/data/customDataProvider";
+import CustomLayout from "./layout";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Admin
+        dataProvider={customDataProvider}
+        authProvider={authProvider}
+        layout={CustomLayout}
+      >
+        {modules.map((m) => (
+          <Resource
+            key={m.route}
+            name={m.route}
+            list={ListGuesser}
+            show={ShowGuesser}
+            edit={EditGuesser}
+            icon={m.sidebar.icon}
+          />
+        ))}
+      </Admin>
     </div>
   );
 }
