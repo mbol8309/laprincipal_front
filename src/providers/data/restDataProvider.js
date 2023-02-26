@@ -1,18 +1,13 @@
 import dataProvider from ".";
 import instance from "../../api/instance";
 
-const customDataProvider = {
+const restDataProvider = {
     //----------------LIST
     getList: (resource, params) =>{
         const {page, perPage} = params.pagination;
         const {field, order} = params.sort;
 
-        return instance.post('query',{
-            model:resource,
-            per_page: perPage,
-            page,
-            field, order
-        }).then(({data})=>{
+        return instance.post(`${resource}`,{}).then(({data})=>{
             return {
                 data: data?.data,
                 total:data?.total
@@ -22,7 +17,7 @@ const customDataProvider = {
     //-----------------ONE
     getOne:(resource,params) => {
         const {id} = params;
-        return instance.post('query',{
+        return instance.post(`${resource}/${id}`,{
             model:resource,
             filters:{id}
 
@@ -35,4 +30,4 @@ const customDataProvider = {
 
 }
 
-export default customDataProvider
+export default restDataProvider

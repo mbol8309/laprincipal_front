@@ -12,14 +12,13 @@ import "@fontsource/roboto/300.css";
 import modules from "./modules";
 import dataProvider from "./providers/data";
 import authProvider from "./providers/auth";
-import customDataProvider from "./providers/data/customDataProvider";
 import CustomLayout from "./layout";
 
 function App() {
   return (
     <div className="App">
       <Admin
-        dataProvider={customDataProvider}
+        dataProvider={dataProvider}
         authProvider={authProvider}
         layout={CustomLayout}
       >
