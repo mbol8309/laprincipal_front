@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { useGetIdentity, useLogout, UserMenu } from "react-admin";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import ProfileMenuItem from "./profile";
+import modules from "../../modules";
 
 const CustomUserMenu = (props) => {
   const logout = useLogout();
@@ -16,6 +16,10 @@ const CustomUserMenu = (props) => {
     logout();
   };
 
+  const modulesMenus = modules
+    .filter((m) => m.usermenu)
+    .map((m) => ({ ...m.usermenu, key: m.route }));
+
   return (
     <UserMenu {...props}>
       {isLoading ? (
@@ -24,7 +28,7 @@ const CustomUserMenu = (props) => {
         </MenuItem>
       ) : (
         [
-          <ProfileMenuItem key='profile-menu' />,
+          ...modulesMenus,
           <MenuItem onClick={handleLogout} key="logout-menu">
             <ListItemIcon>
               <PowerSettingsNewIcon />
@@ -37,4 +41,4 @@ const CustomUserMenu = (props) => {
   );
 };
 
-export default CustomUserMenu
+export default CustomUserMenu;

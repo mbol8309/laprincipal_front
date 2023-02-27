@@ -15,9 +15,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use(function (config) {
   //   config.headers["Accept-Language"] = i18n.language;
-  const token = localStorage.getItem("token");
-  if (!isEmpty(token)) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  if (!isEmpty(auth.token)) {
+    config.headers.Authorization = `Bearer ${auth.token}`;
   }
   return config;
 });

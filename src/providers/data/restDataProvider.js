@@ -7,7 +7,7 @@ const restDataProvider = {
         const {page, perPage} = params.pagination;
         const {field, order} = params.sort;
 
-        return instance.post(`${resource}`,{}).then(({data})=>{
+        return instance.get(`${resource}`,{}).then(({data})=>{
             return {
                 data: data?.data,
                 total:data?.total
@@ -17,13 +17,13 @@ const restDataProvider = {
     //-----------------ONE
     getOne:(resource,params) => {
         const {id} = params;
-        return instance.post(`${resource}/${id}`,{
+        return instance.get(`${resource}/${id}`,{
             model:resource,
             filters:{id}
 
         }).then(({data})=>{
             return {
-                data:data.data[0]
+                data:data.data
             };
         })
     }

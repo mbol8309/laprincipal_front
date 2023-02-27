@@ -6,17 +6,14 @@ const CustomMenu = () => {
   return (
     <Menu>
       <Menu.DashboardItem />
-      
-        {[...modules
+
+      {[
+        ...modules
           .filter((m) => Boolean(m.sidebar))
           .map((m) => {
-            return (
-              <Menu.ResourceItem name={m.route}
-              />
-            );
-          })]
-        }
-      
+            return <Menu.ResourceItem name={m.route} key={m.route} />;
+          }),
+      ]}
     </Menu>
   );
 };

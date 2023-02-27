@@ -26,10 +26,11 @@ function App() {
           <Resource
             key={m.route}
             name={m.route}
-            list={ListGuesser}
-            show={ShowGuesser}
-            edit={EditGuesser}
-            icon={m.sidebar.icon}
+            list={m.list ? m.list : ListGuesser}
+            show={m.show ? m.show : ShowGuesser}
+            edit={m.edit ? m.edit : EditGuesser}
+            create={m.create ? m.create : undefined}
+            icon={m.icon}
           />
         ))}
       </Admin>
