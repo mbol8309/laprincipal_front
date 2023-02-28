@@ -1,12 +1,19 @@
-import { Box, Grid, Tab, Tabs } from "@mui/material";
+import { Box, CircularProgress, Grid, Tab, Tabs } from "@mui/material";
 import { Container } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Datagrid,
+  EditBase,
+  EditContext,
+  EditContextProvider,
   LinearProgress,
   List,
   RecordContextProvider,
+  SimpleForm,
   TextField,
+  TextInput,
+  useEditContext,
+  useEditController,
   useGetList,
   useGetOne,
   useListContext,
@@ -15,28 +22,66 @@ import {
 } from "react-admin";
 import { TabPanel } from "../../components/TabPanel";
 
-const SettingItem = () => {
-  const item = useRecordContext();
-  return item.name;
+const SettingItem = ({ value }) => {
+  const { record, isLoading } = useEditContext();
+
+  const item = useMemo(() => {
+    return record[value];
+  }, [value, record]);
+
+  const type = useMemo(() => {
+    return item?.type;
+  }, [item]);
+  const label = useMemo(() => {
+    return item?.label;
+  }, [item]);
+
+  if (value == "id") {
+    return null;
+  }
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
+  console.log(item);
+
+  switch (type) {
+    case "text":
+      return <TextInput source={`${value}.payload`} label={label} />;
+    case "integer":
+      return (
+        <TextInput type="number" source={`${value}.payload`} label={label} />
+      );
+    default:
+      return null;
+  }
 };
 
 const SettingGroupResource = () => {
   const group = useRecordContext();
-  const { data, isLoading, error, refetch } = useGetOne("setting", {
+  //   const { data, isLoading, error, refetch } = useGetOne("setting", {
+  //     id: group?.id,
+  //   });
+  const editContext = useEditController({
+    resource: "setting",
     id: group?.id,
   });
-  if (isLoading) {
+  if (editContext.isLoading) {
     return <LinearProgress />;
   }
+
   return (
     <Grid container>
-      {Object.values(data).map((s) => (
-        <Grid item md={12}>
-          <RecordContextProvider value={s} key={s.id}>
-            <SettingItem />
-          </RecordContextProvider>
-        </Grid>
-      ))}
+      <EditContextProvider value={editContext}>
+        <SimpleForm onSubmit={editContext.save}>
+          {Object.keys(editContext.record).map((s) => (
+            <Grid item md={12}>
+              <SettingItem value={s} />
+            </Grid>
+          ))}
+        </SimpleForm>
+      </EditContextProvider>
     </Grid>
   );
 };

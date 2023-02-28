@@ -7,7 +7,7 @@ const genericDataProvider = {
         const {page, perPage} = params.pagination;
         const {field, order} = params.sort;
 
-        return instance.post('query',{
+        return instance.post('getAll',{
             model:resource,
             per_page: perPage,
             page,
@@ -21,14 +21,14 @@ const genericDataProvider = {
     },
     //-----------------ONE
     getOne:(resource,params) => {
-        const {id} = params;
-        return instance.post('query',{
+        const {id,...filters} = params;
+        return instance.post('getById',{
             model:resource,
-            filters:{id}
-
+            id,
+            ...filters
         }).then(({data})=>{
             return {
-                data:data.data[0]
+                data:data.data
             };
         })
     }
