@@ -1,0 +1,4 @@
+.RaMenu-closed .MuiListItemText-root {
+  width: 0;
+  overflow: hidden;
+}
