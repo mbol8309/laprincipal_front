@@ -1,6 +1,6 @@
 import {
   ExpandLess as ExpandLessIcon,
-  ExpandMore as ExpandMoreIcon,
+  KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
 import {
   Collapse,
@@ -11,36 +11,55 @@ import {
 } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router";
-import './CustomMenuItem.css'
+import "./CustomMenuItem.css";
 
-const CustomMenuItem = ({ item, onSelect, selected }) => {
+const CustomMenuItem = ({ item, onSelect, selected, children }) => {
   const navigate = useNavigate();
-  const collapsed = useMemo(()=>{
-    return item?.route === selected
-  },[selected, item])
-  
+  const collapsed = item?.route === selected
+
+  const hasChildren = useMemo(() => {
+    return Boolean(children);
+  }, [children]);
+
+  const handleCollapse = (route)=>{
+    onSelect && onSelect(!collapsed ? route : null)
+  }
+
+  const handleRedirect = (route) =>{
+    navigate(route)
+  }
 
   return (
     <>
       <ListItem key={item.route} disablePadding disableGutters>
-        <ListItemButton onClick={() => onSelect && onSelect(!collapsed ? item.route : null)}>
+        <ListItemButton
+          onClick={() => hasChildren ? handleCollapse(item.route): handleRedirect(item.route)}
+        >
           <ListItemIcon>
             <item.icon />
           </ListItemIcon>
-          <ListItemText primary={item.sidebar.label}></ListItemText>
-          <ExpandLessIcon className={`expand-icon ${!collapsed ? "rotated" : ""}`}/>
+          <ListItemText primary={item.label}></ListItemText>
+          {hasChildren && (
+            <KeyboardArrowRightIcon
+              className={`expand-icon ${collapsed ? "rotated" : ""}`}
+            />
+          )}
         </ListItemButton>
       </ListItem>
-      <Collapse in={collapsed} timeout="auto" unmountOnExit>
-        <ListItem key={item.route} disablePadding disableGutters>
-          <ListItemButton onClick={() => navigate(item.route)}>
-            <ListItemIcon>
-              <item.icon />
-            </ListItemIcon>
-            <ListItemText primary={item.sidebar.label}></ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Collapse>
+      {hasChildren && (
+        <Collapse in={collapsed} timeout="auto" unmountOnExit>
+          {children.map((c) => (
+            <ListItem key={c.route} disablePadding disableGutters>
+              <ListItemButton onClick={() => handleRedirect(c.route)}>
+                <ListItemIcon>
+                  <c.icon />
+                </ListItemIcon>
+                <ListItemText primaryTypographyProps={{noWrap:true}} primary={c.label}></ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      )}
     </>
   );
 };

@@ -4,11 +4,11 @@ import { SettingList } from "./SettingList";
 
 const Setting = {
   name: "Setting",
-  route: 'setting',
-  icon: SettingsIcon,
   sidebar: {
     label: "Settings",
+    route: 'setting',
+    icon: SettingsIcon,
+    list:SettingList
   },
-  list:SettingList
 };
 export default Setting;

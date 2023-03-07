@@ -13,8 +13,8 @@ import "./index.css";
 import CustomMenuItem from "../../components/CustomMenuItem";
 
 const CustomMenu = (props) => {
-  const navigate = useNavigate();
   const [selected, setSelected] = useState(null)
+  console.log(selected)
   return (
     <Menu>
       <Menu.DashboardItem />
@@ -25,7 +25,7 @@ const CustomMenu = (props) => {
           .map((m) => {
             //  return (<MenuItemLink to={m.route} key={m.route} primaryText={m.sidebar.label} leftIcon={<m.icon/>}/>)
             return (
-              <CustomMenuItem item={m} key={m.route} selected={selected} onSelect={setSelected}/>
+              <CustomMenuItem item={m.sidebar} key={m.name} selected={selected} onSelect={setSelected} children={m.sidebar.children}/>
             );
           }),
       ]}

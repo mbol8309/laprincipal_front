@@ -44,8 +44,6 @@ const SettingItem = ({ value }) => {
     return <CircularProgress />;
   }
 
-  console.log(item);
-
   switch (type) {
     case "text":
       return <TextInput source={`${value}.payload`} label={label} />;

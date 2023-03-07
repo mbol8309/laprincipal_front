@@ -17,23 +17,43 @@ import CustomLayout from "./layout";
 function App() {
   return (
     <div className="App">
-      <Admin
-        dataProvider={dataProvider}
-        authProvider={authProvider}
-        layout={CustomLayout}
-      >
-        {modules.map((m) => (
-          <Resource
-            key={m.route}
-            name={m.route}
-            list={m.list ? m.list : ListGuesser}
-            show={m.show ? m.show : ShowGuesser}
-            edit={m.edit ? m.edit : EditGuesser}
-            create={m.create ? m.create : undefined}
-            icon={m.icon}
-          />
-        ))}
-      </Admin>
+        <Admin
+          dataProvider={dataProvider}
+          authProvider={authProvider}
+          layout={CustomLayout}
+        >
+          {modules.filter(m=>Boolean(m.sidebar)).map((m) => {
+            if (Boolean(m.sidebar.children)) {
+              return (
+                <>
+                  {m.sidebar.children.map((c) => (
+                    <Resource
+                      key={c.route}
+                      name={c.route}
+                      list={c.list ? c.list : ListGuesser}
+                      show={c.show ? c.show : ShowGuesser}
+                      edit={c.edit ? c.edit : EditGuesser}
+                      create={c.create ? c.create : undefined}
+                      icon={c.icon}
+                    />
+                  ))}
+                </>
+              );
+            } else {
+              return (
+                <Resource
+                  key={m.sidebar.route}
+                  name={m.sidebar.route}
+                  list={m.sidebar.list ? m.sidebar.list : ListGuesser}
+                  show={m.sidebar.show ? m.sidebar.show : ShowGuesser}
+                  edit={m.sidebar.edit ? m.sidebar.edit : EditGuesser}
+                  create={m.sidebar.create ? m.sidebar.create : undefined}
+                  icon={m.sidebar.icon}
+                />
+              );
+            }
+          })}
+        </Admin>
     </div>
   );
 }
