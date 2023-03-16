@@ -15,7 +15,7 @@ import {
   } from 'react-admin';
 
 const dataProviders = [
-  { dataProvider: restDataProvider, resource: ["setting"] },
+  { dataProvider: restDataProvider, resource: ["setting",'front'] },
   { dataProvider: genericDataProvider, resource: [] },
 ];
 

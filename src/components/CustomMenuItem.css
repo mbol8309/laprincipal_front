@@ -6,7 +6,7 @@
 }
 
 .MuiListItem-root:hover {
-    background-color: rgb(212, 212, 255);
+    background-color: rgb(175, 175, 175);
 }
 
 .MuiList-root > .MuiCollapse-root {

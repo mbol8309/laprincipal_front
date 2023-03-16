@@ -10,6 +10,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useMemo } from "react";
+import { useGetOne } from "react-admin";
 import { useNavigate } from "react-router";
 import "./CustomMenuItem.css";
 
@@ -28,6 +29,8 @@ const CustomMenuItem = ({ item, onSelect, selected, children }) => {
   const handleRedirect = (route) =>{
     navigate(route)
   }
+
+
 
   return (
     <>
