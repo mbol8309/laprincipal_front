@@ -7,6 +7,8 @@ import {
 import { useGetIdentity, useLogout, UserMenu } from "react-admin";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import modules from "../../modules";
+import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 
 const CustomUserMenu = (props) => {
   const logout = useLogout();
@@ -16,9 +18,22 @@ const CustomUserMenu = (props) => {
     logout();
   };
 
-  const modulesMenus = modules
-    .filter((m) => m.usermenu)
-    .map((m) => ({ ...m.usermenu, key: m.route }));
+  // const [menus, setMenus] = useState([]);
+
+  // useEffect(() => {
+  //   let modulesMenus = modules
+  //     .filter((m) => m.usermenu)
+  //     .map((m) => (
+  //       <MenuItem key={m.route} onClick={() => navigate(m.route)}>
+  //         <ListItemIcon>
+  //           <m.usermenu.icon />
+  //         </ListItemIcon>
+  //       </MenuItem>
+  //     ));
+  //   setMenus(modulesMenus);
+  // },[modules]);
+
+  const navigate = useNavigate();
 
   return (
     <UserMenu {...props}>
@@ -28,7 +43,8 @@ const CustomUserMenu = (props) => {
         </MenuItem>
       ) : (
         [
-          ...modulesMenus,
+          ...modules.filter(x=>x.usermenu).map(x=><x.usermenu/>),
+          
           <MenuItem onClick={handleLogout} key="logout-menu">
             <ListItemIcon>
               <PowerSettingsNewIcon />

@@ -12,15 +12,16 @@ import {
 import { useMemo } from "react";
 import { useGetOne } from "react-admin";
 import { useNavigate } from "react-router";
+import renderIconFromString from "../api/renderIconFromString";
 import "./CustomMenuItem.css";
 
-const CustomMenuItem = ({ item, onSelect, selected, children }) => {
+const CustomMenuItem = ({ item, onSelect, selected }) => {
   const navigate = useNavigate();
-  const collapsed = item?.route === selected
+  const collapsed = item?.id === selected
 
   const hasChildren = useMemo(() => {
-    return Boolean(children);
-  }, [children]);
+    return Boolean(item?.children);
+  }, [item]);
 
   const handleCollapse = (route)=>{
     onSelect && onSelect(!collapsed ? route : null)
@@ -34,12 +35,12 @@ const CustomMenuItem = ({ item, onSelect, selected, children }) => {
 
   return (
     <>
-      <ListItem key={item.route} disablePadding disableGutters>
+      <ListItem disablePadding disableGutters>
         <ListItemButton
-          onClick={() => hasChildren ? handleCollapse(item.route): handleRedirect(item.route)}
+          onClick={() => hasChildren ? handleCollapse(item.id): handleRedirect(item.route)}
         >
           <ListItemIcon>
-            <item.icon />
+            {renderIconFromString(item.icon)}
           </ListItemIcon>
           <ListItemText primary={item.label}></ListItemText>
           {hasChildren && (
@@ -51,11 +52,11 @@ const CustomMenuItem = ({ item, onSelect, selected, children }) => {
       </ListItem>
       {hasChildren && (
         <Collapse in={collapsed} timeout="auto" unmountOnExit>
-          {children.map((c) => (
+          {item.children.map((c) => (
             <ListItem key={c.route} disablePadding disableGutters>
               <ListItemButton onClick={() => handleRedirect(c.route)}>
                 <ListItemIcon>
-                  <c.icon />
+                  {renderIconFromString(c.icon)}
                 </ListItemIcon>
                 <ListItemText primaryTypographyProps={{noWrap:true}} primary={c.label}></ListItemText>
               </ListItemButton>

@@ -5,7 +5,7 @@ import User from "./Users";
 const modules = [
     User,
     Setting,
-    //Profile
+    Profile
 ];
 
 export default modules

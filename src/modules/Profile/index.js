@@ -3,9 +3,7 @@ import ProfileMenuItem from "./profile";
 
 const Profile = {
   name: "Profile",
-  usermenu: {
-    icon: ProfileMenuItem,
-    route: "profile",
-  },
+  route: "profile",
+  usermenu: ProfileMenuItem
 };
 export default Profile;

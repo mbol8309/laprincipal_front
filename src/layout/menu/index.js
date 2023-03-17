@@ -46,12 +46,13 @@ const CustomMenu = (props) => {
           ...menu?.items?.map((m) => {
             console.log(m);
             return (
-              <MenuItemLink
-                to={m.route}
-                key={m.route}
-                primaryText={m.label}
-                leftIcon={renderIconFromString(m.icon)}
-              />
+              <CustomMenuItem item={m} key={m.id} selected={selected} onSelect={setSelected}/>
+              // <MenuItemLink
+              //   to={m.route}
+              //   key={m.route}
+              //   primaryText={m.label}
+              //   leftIcon={renderIconFromString(m.icon)}
+              // />
             );
           }),
         ]}
