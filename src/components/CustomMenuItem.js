@@ -12,7 +12,7 @@ import {
 import { useMemo } from "react";
 import { useGetOne } from "react-admin";
 import { useNavigate } from "react-router";
-import renderIconFromString from "../api/renderIconFromString";
+import renderIconFromString from "../utils/renderIconFromString";
 import "./CustomMenuItem.css";
 
 const CustomMenuItem = ({ item, onSelect, selected }) => {
@@ -53,7 +53,7 @@ const CustomMenuItem = ({ item, onSelect, selected }) => {
       {hasChildren && (
         <Collapse in={collapsed} timeout="auto" unmountOnExit>
           {item.children.map((c) => (
-            <ListItem key={c.route} disablePadding disableGutters>
+            <ListItem key={c.route} disablePadding disableGutters {...c.props}>
               <ListItemButton onClick={() => handleRedirect(c.route)}>
                 <ListItemIcon>
                   {renderIconFromString(c.icon)}

@@ -14,7 +14,6 @@ import { useNavigate } from "react-router";
 import "./index.css";
 import CustomMenuItem from "../../components/CustomMenuItem";
 import useFront from "../../api/useFront";
-import renderIconFromString from "../../api/renderIconFromString";
 
 const CustomMenu = (props) => {
   const [selected, setSelected] = useState(null);
@@ -24,7 +23,6 @@ const CustomMenu = (props) => {
     isSuccess,
     data: menu,
   } = useFront("menu");
-  console.log(menu);
 
   return (
     <>
@@ -44,7 +42,6 @@ const CustomMenu = (props) => {
       ]} */}
         {isSuccess && [
           ...menu?.items?.map((m) => {
-            console.log(m);
             return (
               <CustomMenuItem item={m} key={m.id} selected={selected} onSelect={setSelected}/>
               // <MenuItemLink

@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import {
   Admin,
+  CustomRoutes,
   EditGuesser,
   ListGuesser,
   Resource,
@@ -13,15 +14,20 @@ import modules from "./modules";
 import dataProvider from "./providers/data";
 import authProvider from "./providers/auth";
 import CustomLayout from "./layout";
+import Dashboard from "./components/Dashboard";
+import Resources from "./components/Resources";
 
 function App() {
+  
   return (
     <div className="App">
         <Admin
           dataProvider={dataProvider}
           authProvider={authProvider}
           layout={CustomLayout}
+          dashboard={Dashboard}
         >
+          <Resources/>
           {modules.filter(m=>Boolean(m.sidebar)).map((m) => {
             if (Boolean(m.sidebar.children)) {
               return (
