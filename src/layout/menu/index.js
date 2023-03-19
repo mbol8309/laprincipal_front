@@ -9,20 +9,15 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Menu, MenuItemLink, MenuGroup, Link, useGetOne } from "react-admin";
-import modules from "../../modules";
 import { useNavigate } from "react-router";
 import "./index.css";
 import CustomMenuItem from "../../components/CustomMenuItem";
-import useFront from "../../api/useFront";
+import { useFront } from "../../api/useFront";
 
 const CustomMenu = (props) => {
   const [selected, setSelected] = useState(null);
 
-  const {
-    isLoading,
-    isSuccess,
-    data: menu,
-  } = useFront("menu");
+  const { isLoading, isSuccess, data: menu } = useFront("menu");
 
   return (
     <>
@@ -43,7 +38,12 @@ const CustomMenu = (props) => {
         {isSuccess && [
           ...menu?.items?.map((m) => {
             return (
-              <CustomMenuItem item={m} key={m.id} selected={selected} onSelect={setSelected}/>
+              <CustomMenuItem
+                item={m}
+                key={m.id}
+                selected={selected}
+                onSelect={setSelected}
+              />
               // <MenuItemLink
               //   to={m.route}
               //   key={m.route}

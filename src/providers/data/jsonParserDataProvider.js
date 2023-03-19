@@ -6,7 +6,7 @@ import replaceStringsWithContextValues from "../../utils/replaceStringWithContex
 import restDataProvider from "./restDataProvider";
 
 const jsonParserDataProvider = {
-  ...restDataProvider,
+  ...restDataProvider
 };
 
 export default jsonParserDataProvider;

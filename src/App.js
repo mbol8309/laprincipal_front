@@ -10,25 +10,44 @@ import {
 } from "react-admin";
 import "@fontsource/roboto/300.css";
 
-import modules from "./modules";
 import dataProvider from "./providers/data";
 import authProvider from "./providers/auth";
 import CustomLayout from "./layout";
 import Dashboard from "./components/Dashboard";
-import Resources from "./components/Resources";
+import { QueryClient } from "react-query";
+import { useFront2 } from "./api/useFront";
+import getView from "./utils/getView";
 
 function App() {
-  
+  const queryClient = new QueryClient();
+
+  const {
+    isSuccess,
+    data: resources,
+  } = useFront2("resources", queryClient);
+  console.log(resources);
+
   return (
     <div className="App">
-        <Admin
-          dataProvider={dataProvider}
-          authProvider={authProvider}
-          layout={CustomLayout}
-          dashboard={Dashboard}
-        >
-          <Resources/>
-          {modules.filter(m=>Boolean(m.sidebar)).map((m) => {
+      <Admin
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+        layout={CustomLayout}
+        dashboard={Dashboard}
+        queryClient={queryClient}
+      >
+        {isSuccess &&
+          resources?.items?.map((r) => (
+            <Resource
+              key={r.id}
+              name={r.id}
+              list={getView(r.id,'list',r.list)}
+              show={getView(r.id,'show',r.show)}
+              edit={getView(r.id,'edit',r.edit)}
+              create={getView(r.id,'create',r.create)}
+            />
+          ))}
+        {/* {modules.filter(m=>Boolean(m.sidebar)).map((m) => {
             if (Boolean(m.sidebar.children)) {
               return (
                 <>
@@ -58,8 +77,8 @@ function App() {
                 />
               );
             }
-          })}
-        </Admin>
+          })} */}
+      </Admin>
     </div>
   );
 }
