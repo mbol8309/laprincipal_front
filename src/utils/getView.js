@@ -27,9 +27,7 @@ const getView = (resource, view, value) => {
     let formatResource =
       String(resource).charAt(0).toUpperCase() + resource.slice(1);
     let component = formatResource + formatView;
-    console.log(modules)
     if (Object.hasOwn(modules, component)) {
-        console.log(modules[component])
       return modules[component];
     }
     return null;

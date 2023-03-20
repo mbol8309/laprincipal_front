@@ -25,7 +25,6 @@ function App() {
     isSuccess,
     data: resources,
   } = useFront2("resources", queryClient);
-  console.log(resources);
 
   return (
     <div className="App">

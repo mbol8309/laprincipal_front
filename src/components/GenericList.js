@@ -1,7 +1,8 @@
 import { LinearProgress } from "@mui/material";
 import { useMemo } from "react";
-import { Datagrid, DateField, EmailField, List, ListGuesser, TextField, useResourceContext } from "react-admin"
+import { Datagrid, DateField, EmailField, List, ListGuesser, TextField, TextInput, useResourceContext } from "react-admin"
 import { useFront } from "../api/useFront"
+import getParsedFilters from "../utils/getParsedFilters";
 
 const GenericList = () => {
     const resource = useResourceContext()
@@ -14,23 +15,31 @@ const GenericList = () => {
         return null;
     },[description])
 
+    const filters = useMemo(()=>{
+        let filters = getParsedFilters(resourceDescription?.filters)
+        console.log('filters',filters)
+        return filters
+    },[resourceDescription])
+
     if (isLoading){
         return <LinearProgress/>
     }
 
+    
+
     if (isSuccess){
         return (
-            <List>
+            <List filters={filters}>
                 <Datagrid rowClick={resourceDescription?.rowClick ?? "edit" }>
                     {
                         resourceDescription?.items?.map(i=>{
                             switch(i.type){
                                 case "textfield":
-                                    return <TextField source={i.id} key={i.id}/>
+                                    return <TextField source={i.id} key={i.id} sortable={Boolean(i?.sort)}/>
                                 case "emailfield":
-                                    return <EmailField source={i.id} key={i.id}/>
+                                    return <EmailField source={i.id} key={i.id} sortable={Boolean(i?.sort)}/>
                                 case "datefield":
-                                    return <DateField source={i.id} key={i.id}/>
+                                    return <DateField source={i.id} key={i.id} sortable={Boolean(i?.sort)}/>
                                 default:
                                     return null;
                             }
