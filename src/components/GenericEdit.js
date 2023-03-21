@@ -42,13 +42,13 @@ const GenericEdit = () => {
             {resourceDescription?.items?.map((i) => {
               switch (i.type) {
                 case "textfield":
-                  return <TextInput source={i.id} key={i.id} />;
+                  return <TextInput source={i.id} key={i.id} label={i?.label ?? undefined} />;
                 case "emailfield":
-                  return <TextInput source={i.id} key={i.id} />;
+                  return <TextInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
                 case "datefield":
-                  return <DateInput source={i.id} key={i.id} />;
+                  return <DateInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
                 case "datetimefield":
-                  return <DateTimeInput source={i.id} key={i.id} />;
+                  return <DateTimeInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
                 default:
                   return null;
               }

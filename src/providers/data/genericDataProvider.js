@@ -5,16 +5,20 @@ const genericDataProvider = {
   //----------------LIST
   getList: (resource, params) => {
     const { page, perPage } = params.pagination;
-    const {filter, meta, sort} = params
-
-    return instance
-      .post("getAll", {
+    const {filter, meta} = params;
+    const {field, order} = params.sort;
+    let data = {
         model: resource,
         per_page: perPage,
         page,
-        sort,
         filters: filter
-      })
+      }
+    if (params.sort){
+        data.sort_by = `${field} ${order}`;
+    }
+
+    return instance
+      .post("getAll",data )
       .then(({ data }) => {
         return {
           data: data?.data,

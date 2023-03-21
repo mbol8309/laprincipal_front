@@ -1,6 +1,6 @@
 import { LinearProgress } from "@mui/material";
 import { useMemo } from "react";
-import { Datagrid, DateField, EmailField, List, ListGuesser, TextField, TextInput, useResourceContext } from "react-admin"
+import { Datagrid, DateField, EmailField, List, ListGuesser, ReferenceField, TextField, TextInput, useResourceContext } from "react-admin"
 import { useFront } from "../api/useFront"
 import getParsedFilters from "../utils/getParsedFilters";
 
@@ -35,11 +35,13 @@ const GenericList = () => {
                         resourceDescription?.items?.map(i=>{
                             switch(i.type){
                                 case "textfield":
-                                    return <TextField source={i.id} key={i.id} sortable={Boolean(i?.sort)}/>
+                                    return <TextField source={i.id} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                                 case "emailfield":
-                                    return <EmailField source={i.id} key={i.id} sortable={Boolean(i?.sort)}/>
+                                    return <EmailField source={i.id} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                                 case "datefield":
-                                    return <DateField source={i.id} key={i.id} sortable={Boolean(i?.sort)}/>
+                                    return <DateField source={i.id} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
+                                case "reference":
+                                    return <ReferenceField source={'author_id'} reference={'author'} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                                 default:
                                     return null;
                             }

@@ -27,11 +27,11 @@ const GenericShow = () => {
                         resourceDescription?.items?.map(i=>{
                             switch(i.type){
                                 case "textfield":
-                                    return <TextField source={i.id} key={i.id}/>
+                                    return <TextField source={i.id} key={i.id} label={i?.label ?? undefined}/>
                                 case "emailfield":
-                                    return <EmailField source={i.id} key={i.id}/>
+                                    return <EmailField source={i.id} key={i.id} label={i?.label ?? undefined}/>
                                 case "datefield":
-                                    return <DateField source={i.id} key={i.id}/>
+                                    return <DateField source={i.id} key={i.id} label={i?.label ?? undefined}/>
                                 default:
                                     return null;
                             }
