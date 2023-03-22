@@ -1,8 +1,9 @@
 import { LinearProgress } from "@mui/material";
 import { useMemo } from "react";
-import { Datagrid, DateField, EmailField, List, ListGuesser, ReferenceField, TextField, TextInput, useResourceContext } from "react-admin"
+import { ChipField, Datagrid, DateField, EmailField, List, ListGuesser, ReferenceField, ReferenceManyField, ReferenceManyFieldView, SingleFieldList, TextField, TextInput, useResourceContext } from "react-admin"
 import { useFront } from "../api/useFront"
 import getParsedFilters from "../utils/getParsedFilters";
+import renderReferenceMany from "../utils/renderReferenceMany";
 
 const GenericList = () => {
     const resource = useResourceContext()
@@ -42,6 +43,11 @@ const GenericList = () => {
                                     return <DateField source={i.id} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                                 case "reference":
                                     return <ReferenceField source={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
+                                case "reference_many":
+                                    return <ReferenceManyField target={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}>
+                                        {renderReferenceMany(i.render)}
+
+                                    </ReferenceManyField>
                                 default:
                                     return null;
                             }

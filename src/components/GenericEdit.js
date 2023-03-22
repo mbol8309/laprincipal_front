@@ -7,6 +7,7 @@ import {
   EditGuesser,
   EmailField,
   LinearProgress,
+  ReferenceInput,
   SimpleForm,
   SimpleShowLayout,
   TextField,
@@ -49,6 +50,8 @@ const GenericEdit = () => {
                   return <DateInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
                 case "datetimefield":
                   return <DateTimeInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
+                  case "reference":
+                    return <ReferenceInput source={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                 default:
                   return null;
               }

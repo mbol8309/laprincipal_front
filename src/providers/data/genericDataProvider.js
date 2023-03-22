@@ -52,6 +52,32 @@ const genericDataProvider = {
         };
       });
   },
+  getManyReference: (resource, params) => {
+    const {target, id, pagination, sort, filter, meta}=params;
+    const { page, perPage } = pagination;
+    let data = {
+        model: resource,
+        per_page: perPage,
+        page,
+        filters: {
+            ...filter,
+            [target]:id
+        }
+      }
+    if (params.sort){
+        const {field, order} = params.sort;
+        data.sort_by = `${field} ${order}`;
+    }
+
+    return instance
+      .post("getAll",data )
+      .then(({ data }) => {
+        return {
+          data: data?.data,
+          total: data?.total,
+        };
+      });
+  },
   update: (resource, params) => {
     const { id, data, previousData, meta } = params;
     return instance

@@ -17,6 +17,7 @@ import Dashboard from "./components/Dashboard";
 import { QueryClient } from "react-query";
 import { useFront2 } from "./api/useFront";
 import getView from "./utils/getView";
+import CustomBackdrop from "./components/CustomBackdrop";
 
 function App() {
   const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ function App() {
         layout={CustomLayout}
         dashboard={Dashboard}
         queryClient={queryClient}
+        ready={CustomBackdrop}
       >
         {isSuccess &&
           resources?.items?.map((r) => (

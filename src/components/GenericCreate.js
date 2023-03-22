@@ -1,7 +1,7 @@
 
 
 import { useMemo } from "react";
-import { Create, DateInput, DateTimeInput, EditGuesser, LinearProgress, SimpleForm, TextInput, useResourceContext } from "react-admin"
+import { Create, DateInput, DateTimeInput, EditGuesser, LinearProgress, ReferenceInput, SimpleForm, TextInput, useResourceContext } from "react-admin"
 import { useFront } from "../api/useFront";
 
 const GenericCreate = () => {
@@ -38,6 +38,8 @@ const GenericCreate = () => {
                   return <DateInput source={i.id} key={i.id} />;
                 case "datetimefield":
                   return <DateTimeInput source={i.id} key={i.id} />;
+                  case "reference":
+                    return <ReferenceInput source={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                 default:
                   return null;
               }

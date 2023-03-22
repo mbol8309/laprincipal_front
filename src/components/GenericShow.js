@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { DateField, EmailField, LinearProgress, Show, ShowGuesser, SimpleShowLayout, TextField, useResourceContext } from "react-admin"
+import { DateField, EmailField, LinearProgress, ReferenceField, ReferenceManyField, Show, ShowGuesser, SimpleShowLayout, TextField, useResourceContext } from "react-admin"
 import { useFront } from "../api/useFront";
 
 const GenericShow = () => {
@@ -32,6 +32,10 @@ const GenericShow = () => {
                                     return <EmailField source={i.id} key={i.id} label={i?.label ?? undefined}/>
                                 case "datefield":
                                     return <DateField source={i.id} key={i.id} label={i?.label ?? undefined}/>
+                                case "reference":
+                                    return <ReferenceField source={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
+                                case "reference_many":
+                                    return <ReferenceManyField target={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                                 default:
                                     return null;
                             }
