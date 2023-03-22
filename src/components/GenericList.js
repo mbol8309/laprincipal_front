@@ -41,7 +41,7 @@ const GenericList = () => {
                                 case "datefield":
                                     return <DateField source={i.id} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                                 case "reference":
-                                    return <ReferenceField source={'author_id'} reference={'author'} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
+                                    return <ReferenceField source={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
                                 default:
                                     return null;
                             }

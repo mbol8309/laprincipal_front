@@ -44,7 +44,7 @@ function App() {
               show={getView(r.id,'show',r.show)}
               edit={getView(r.id,'edit',r.edit)}
               create={getView(r.id,'create',r.create)}
-              recordRepresentation={(record)=>`${record.first_name} ${record.last_name}`}
+              recordRepresentation={(record)=> r.representation ? eval("`" + r.representation + "`") : r.id }
             />
           ))}
         {/* {modules.filter(m=>Boolean(m.sidebar)).map((m) => {

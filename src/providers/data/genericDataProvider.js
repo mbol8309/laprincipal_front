@@ -28,14 +28,25 @@ const genericDataProvider = {
   },
   //-----------------ONE
   getOne: (resource, params) => {
-    const { id, ...filters } = params;
+    const { id, meta } = params;
     return instance
       .post("getById", {
         model: resource,
-        id,
-        ...filters,
+        id
       })
       .then(({ data }) => {
+        return {
+          data: data.data,
+        };
+      });
+  },
+  getMany: (resource, params) => {
+    const {ids,meta} = params;
+    return instance.post("getByIds", {
+        model: resource,
+        ids
+    })
+    .then(({ data }) => {
         return {
           data: data.data,
         };
