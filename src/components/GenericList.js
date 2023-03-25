@@ -31,6 +31,7 @@ const GenericList = () => {
     if (isSuccess){
         return (
             <List filters={filters}>
+                
                 <Datagrid rowClick={resourceDescription?.rowClick ?? "edit" }>
                     {
                         resourceDescription?.items?.map(i=>{

@@ -8,13 +8,16 @@ import {
   EmailField,
   LinearProgress,
   ReferenceInput,
+  ReferenceManyField,
   SimpleForm,
   SimpleShowLayout,
+  TabbedForm,
   TextField,
   TextInput,
   useResourceContext,
 } from "react-admin";
 import { useFront } from "../api/useFront";
+import renderReferenceMany from "../utils/renderReferenceMany";
 
 const GenericEdit = () => {
   const resource = useResourceContext();
@@ -30,6 +33,15 @@ const GenericEdit = () => {
     }
     return null;
   }, [description]);
+
+  const tabbedItems = useMemo(() => {
+    if (resourceDescription) {
+      return resourceDescription.items.filter((i) =>
+        ["reference_many"].includes(i.type)
+      );
+    }
+    return [];
+  });
 
   if (isLoading) {
     return <LinearProgress />;
@@ -57,6 +69,21 @@ const GenericEdit = () => {
               }
             })}
           </SimpleForm>
+          {tabbedItems.length > 0 && (
+            <TabbedForm>
+              {tabbedItems.map((tab) => (
+                <TabbedForm.Tab key={tab.id} label={tab.label}>
+                  <ReferenceManyField
+                    target={tab.id}
+                    reference={tab.reference}
+                    key={tab.id}
+                  >
+                    {renderReferenceMany(tab.render, true)}
+                  </ReferenceManyField>
+                </TabbedForm.Tab>
+              ))}
+            </TabbedForm>
+          )}
         </Edit>
       );
     }
