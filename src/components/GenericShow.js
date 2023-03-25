@@ -56,61 +56,79 @@ const GenericShow = () => {
           <Button onClick={() => navigate(-1)}>Back</Button>
 
           <Show>
-            
             <SimpleShowLayout>
-            {resourceDescription?.items?.map((i) => {
-              switch (i.type) {
-                case "textfield":
-                  return (
-                    <TextField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "emailfield":
-                  return (
-                    <EmailField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "datefield":
-                  return (
-                    <DateField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "reference":
-                  return (
-                    <ReferenceField
-                      source={i.id}
-                      reference={i.reference}
-                      key={i.id}
-                      sortable={Boolean(i?.sort)}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                // case "reference_many":
-                //   return (
-                //     <ReferenceManyField
-                //       target={i.id}
-                //       reference={i.reference}
-                //       key={i.id}
-                //       sortable={Boolean(i?.sort)}
-                //       label={i?.label ?? undefined}
-                //     >
-                //       {renderReferenceMany(i.render)}
-                //     </ReferenceManyField>
-                //   );
-                default:
-                  return null;
-              }
-            })}
-          </SimpleShowLayout>
+              {resourceDescription?.items?.map((i) => {
+                switch (i.type) {
+                  case "textfield":
+                    return (
+                      <TextField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "emailfield":
+                    return (
+                      <EmailField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "datefield":
+                    return (
+                      <DateField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "reference":
+                    return (
+                      <ReferenceField
+                        source={i.id}
+                        reference={i.reference}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "richtextfield":
+                    return (
+                      <RichTextField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                    case "textareafield":
+                      return (
+                        <TextField
+                          source={i.id}
+                          key={i.id}
+                          label={i?.label ?? undefined}
+                        />
+                      );
+                  // case "reference_many":
+                  //   return (
+                  //     <ReferenceManyField
+                  //       target={i.id}
+                  //       reference={i.reference}
+                  //       key={i.id}
+                  //       sortable={Boolean(i?.sort)}
+                  //       label={i?.label ?? undefined}
+                  //     >
+                  //       {renderReferenceMany(i.render)}
+                  //     </ReferenceManyField>
+                  //   );
+                  default:
+                    return null;
+                }
+              })}
+            </SimpleShowLayout>
             {tabbedItems.length > 0 && (
               <TabbedShowLayout>
                 {tabbedItems.map((tab) => (
@@ -119,7 +137,7 @@ const GenericShow = () => {
                       target={tab.id}
                       reference={tab.reference}
                       key={tab.id}
-                      pagination={<Pagination/>}
+                      pagination={<Pagination />}
                     >
                       {renderReferenceMany(tab.render)}
                     </ReferenceManyField>

@@ -1,3 +1,4 @@
+import { RichTextInput } from "ra-input-rich-text";
 import { useMemo } from "react";
 import {
   DateField,
@@ -7,6 +8,7 @@ import {
   EditGuesser,
   EmailField,
   LinearProgress,
+  ReferenceArrayInput,
   ReferenceInput,
   ReferenceManyField,
   SimpleForm,
@@ -18,6 +20,7 @@ import {
 } from "react-admin";
 import { useFront } from "../api/useFront";
 import renderReferenceMany from "../utils/renderReferenceMany";
+import { ReferenceManyInput } from "./ReferenceManyInput";
 
 const GenericEdit = () => {
   const resource = useResourceContext();
@@ -55,15 +58,70 @@ const GenericEdit = () => {
             {resourceDescription?.items?.map((i) => {
               switch (i.type) {
                 case "textfield":
-                  return <TextInput source={i.id} key={i.id} label={i?.label ?? undefined} />;
+                  return (
+                    <TextInput
+                      source={i.id}
+                      key={i.id}
+                      label={i?.label ?? undefined}
+                      emptyText={i?.empty}
+                    />
+                  );
                 case "emailfield":
-                  return <TextInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
+                  return (
+                    <TextInput
+                      source={i.id}
+                      key={i.id}
+                      label={i?.label ?? undefined}
+                      emptyText={i?.empty}
+                    />
+                  );
                 case "datefield":
-                  return <DateInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
+                  return (
+                    <DateInput
+                      source={i.id}
+                      key={i.id}
+                      label={i?.label ?? undefined}
+                      emptyText={i?.empty}
+                    />
+                  );
                 case "datetimefield":
-                  return <DateTimeInput source={i.id} key={i.id} label={i?.label ?? undefined}/>;
-                  case "reference":
-                    return <ReferenceInput source={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
+                  return (
+                    <DateTimeInput
+                      source={i.id}
+                      key={i.id}
+                      label={i?.label ?? undefined}
+                    />
+                  );
+                case "reference":
+                  return (
+                    <ReferenceInput
+                      source={i.id}
+                      reference={i.reference}
+                      key={i.id}
+                      sortable={Boolean(i?.sort)}
+                      label={i?.label ?? undefined}
+                      emptyText={i?.empty}
+                    />
+                  );
+                case "richtextfield":
+                  return (
+                    <RichTextInput
+                      source={i.id}
+                      key={i.id}
+                      label={i?.label ?? undefined}
+                    />
+                  );
+                case "textareafield":
+                  return (
+                    <TextInput
+                      multiline={true}
+                      source={i.id}
+                      key={i.id}
+                      label={i?.label ?? undefined}
+                      emptyText={i?.empty}
+                    />
+                  );
+
                 default:
                   return null;
               }
@@ -73,13 +131,13 @@ const GenericEdit = () => {
             <TabbedForm>
               {tabbedItems.map((tab) => (
                 <TabbedForm.Tab key={tab.id} label={tab.label}>
-                  <ReferenceManyField
+                  <ReferenceManyInput
                     target={tab.id}
                     reference={tab.reference}
                     key={tab.id}
                   >
                     {renderReferenceMany(tab.render, true)}
-                  </ReferenceManyField>
+                  </ReferenceManyInput>
                 </TabbedForm.Tab>
               ))}
             </TabbedForm>

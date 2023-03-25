@@ -1,11 +1,20 @@
-
-
 import { useMemo } from "react";
-import { Create, DateInput, DateTimeInput, EditGuesser, LinearProgress, ReferenceInput, SimpleForm, TextInput, useResourceContext } from "react-admin"
+import {
+  Create,
+  DateInput,
+  DateTimeInput,
+  EditGuesser,
+  LinearProgress,
+  ReferenceInput,
+  RichTextField,
+  SimpleForm,
+  TextInput,
+  useResourceContext,
+} from "react-admin";
 import { useFront } from "../api/useFront";
 
 const GenericCreate = () => {
-    const resource = useResourceContext();
+  const resource = useResourceContext();
   const {
     isLoading,
     isSuccess,
@@ -38,8 +47,33 @@ const GenericCreate = () => {
                   return <DateInput source={i.id} key={i.id} />;
                 case "datetimefield":
                   return <DateTimeInput source={i.id} key={i.id} />;
-                  case "reference":
-                    return <ReferenceInput source={i.id} reference={i.reference} key={i.id} sortable={Boolean(i?.sort)} label={i?.label ?? undefined}/>
+                case "reference":
+                  return (
+                    <ReferenceInput
+                      source={i.id}
+                      reference={i.reference}
+                      key={i.id}
+                      sortable={Boolean(i?.sort)}
+                      label={i?.label ?? undefined}
+                    />
+                  );
+                case "richtextfield":
+                  return (
+                    <RichTextField
+                      source={i.id}
+                      key={i.id}
+                      label={i?.label ?? undefined}
+                    />
+                  );
+                  case "textareafield":
+                    return (
+                      <TextInput
+                        multiline={true}
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
                 default:
                   return null;
               }
@@ -50,6 +84,6 @@ const GenericCreate = () => {
     }
   }
   return null;
-}
+};
 
-export default GenericCreate
+export default GenericCreate;
