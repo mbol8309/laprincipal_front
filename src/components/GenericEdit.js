@@ -1,6 +1,7 @@
 import { RichTextInput } from "ra-input-rich-text";
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import {
+  Button,
   DateField,
   DateInput,
   DateTimeInput,
@@ -21,6 +22,7 @@ import {
 import { useFront } from "../api/useFront";
 import renderReferenceMany from "../utils/renderReferenceMany";
 import { ReferenceManyInput } from "./ReferenceManyInput";
+import { useNavigate } from "react-router-dom";
 
 const GenericEdit = () => {
   const resource = useResourceContext();
@@ -28,105 +30,109 @@ const GenericEdit = () => {
     isLoading,
     isSuccess,
     data: description,
-  } = useFront(`resources-${resource}_edit`);
+  } = useFront(`resources-${resource}`);
 
-  const resourceDescription = useMemo(() => {
+  const { fields, views } = useMemo(() => {
     if (description) {
       return description.items;
     }
-    return null;
+    return {};
   }, [description]);
 
   const tabbedItems = useMemo(() => {
-    if (resourceDescription) {
-      return resourceDescription.items.filter((i) =>
-        ["reference_many"].includes(i.type)
-      );
-    }
-    return [];
-  });
+    return fields?.filter((i) => ["reference_many"].includes(i.type)) ?? [];
+  }, [fields]);
+
+  const View = useMemo(() => {
+    if (views?.list?.type === "simple") return SimpleForm;
+    return SimpleForm;
+  }, [views]);
+
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <LinearProgress />;
   }
 
   if (isSuccess) {
-    if (resourceDescription?.type === "simple") {
-      return (
+    return (
+      <Fragment>
+        <Button onClick={() => navigate(-1)}>Back</Button>
         <Edit>
-          <SimpleForm>
-            {resourceDescription?.items?.map((i) => {
-              switch (i.type) {
-                case "textfield":
-                  return (
-                    <TextInput
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
-                case "emailfield":
-                  return (
-                    <TextInput
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
-                case "datefield":
-                  return (
-                    <DateInput
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
-                case "datetimefield":
-                  return (
-                    <DateTimeInput
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "reference":
-                  return (
-                    <ReferenceInput
-                      source={i.id}
-                      reference={i.reference}
-                      key={i.id}
-                      sortable={Boolean(i?.sort)}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
-                case "richtextfield":
-                  return (
-                    <RichTextInput
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "textareafield":
-                  return (
-                    <TextInput
-                      multiline={true}
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
+          <View>
+            {fields &&
+              fields?.map((i) => {
+                switch (i.type) {
+                  case "textfield":
+                    return (
+                      <TextInput
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "emailfield":
+                    return (
+                      <TextInput
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "datefield":
+                    return (
+                      <DateInput
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "datetimefield":
+                    return (
+                      <DateTimeInput
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "reference":
+                    return (
+                      <ReferenceInput
+                        source={i.id}
+                        reference={i.reference}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "richtextfield":
+                    return (
+                      <RichTextInput
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "textareafield":
+                    return (
+                      <TextInput
+                        multiline={true}
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
 
-                default:
-                  return null;
-              }
-            })}
-          </SimpleForm>
+                  default:
+                    return null;
+                }
+              })}
+          </View>
           {tabbedItems.length > 0 && (
             <TabbedForm>
               {tabbedItems.map((tab) => (
@@ -143,8 +149,8 @@ const GenericEdit = () => {
             </TabbedForm>
           )}
         </Edit>
-      );
-    }
+      </Fragment>
+    );
   }
   return null;
 };

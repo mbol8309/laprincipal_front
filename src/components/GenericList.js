@@ -25,20 +25,18 @@ const GenericList = () => {
     isLoading,
     isSuccess,
     data: description,
-  } = useFront(`resources-${resource}_list`);
+  } = useFront(`resources-${resource}`);
 
-  const resourceDescription = useMemo(() => {
+  const { fields, filters, views } = useMemo(() => {
     if (description) {
       return description.items;
     }
-    return null;
+    return {};
   }, [description]);
 
-  const filters = useMemo(() => {
-    let filters = getParsedFilters(resourceDescription?.filters);
-    console.log("filters", filters);
-    return filters;
-  }, [resourceDescription]);
+  const View = useMemo(() => {
+    if (views?.list.type === "datagrid") return Datagrid;
+  }, [views]);
 
   if (isLoading) {
     return <LinearProgress />;
@@ -46,76 +44,79 @@ const GenericList = () => {
 
   if (isSuccess) {
     return (
-      <List filters={filters}>
-        <Datagrid rowClick={resourceDescription?.rowClick ?? "edit"}>
-          {resourceDescription?.items?.map((i) => {
-            switch (i.type) {
-              case "textfield":
-                return (
-                  <TextField
-                    source={i.id}
-                    key={i.id}
-                    sortable={Boolean(i?.sort)}
-                    label={i?.label ?? undefined}
-                    emptyText={i?.empty}
-                  />
-                );
-              case "emailfield":
-                return (
-                  <EmailField
-                    source={i.id}
-                    key={i.id}
-                    sortable={Boolean(i?.sort)}
-                    label={i?.label ?? undefined}
-                    emptyText={i?.empty}
-                  />
-                );
-              case "datefield":
-                return (
-                  <DateField
-                    source={i.id}
-                    key={i.id}
-                    sortable={Boolean(i?.sort)}
-                    label={i?.label ?? undefined}
-                  />
-                );
-              case "reference":
-                return (
-                  <ReferenceField
-                    source={i.id}
-                    reference={i.reference}
-                    key={i.id}
-                    sortable={Boolean(i?.sort)}
-                    label={i?.label ?? undefined}
-                    emptyText={i?.empty}
-                  />
-                );
-              case "reference_many":
-                return (
-                  <ReferenceManyField
-                    target={i.id}
-                    reference={i.reference}
-                    key={i.id}
-                    sortable={Boolean(i?.sort)}
-                    label={i?.label ?? undefined}
-                    emptyText={i?.empty}
-                  >
-                    {renderReferenceMany(i.render)}
-                  </ReferenceManyField>
-                );
-              case "textareafield":
-                return (
-                  <TextField
-                    source={i.id}
-                    key={i.id}
-                    label={i?.label ?? undefined}
-                  />
-                );
-              default:
-                return null;
-            }
-          })}
-        </Datagrid>
+      <List filters={getParsedFilters(filters)}>
+        <View {...(views?.list?.options ?? {})}>
+          {fields &&
+            fields
+              ?.filter((f) => f?.views?.includes("list"))
+              .map((i) => {
+                switch (i.type) {
+                  case "textfield":
+                    return (
+                      <TextField
+                        source={i.id}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "emailfield":
+                    return (
+                      <EmailField
+                        source={i.id}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "datefield":
+                    return (
+                      <DateField
+                        source={i.id}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "reference":
+                    return (
+                      <ReferenceField
+                        source={i.id}
+                        reference={i.reference}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "reference_many":
+                    return (
+                      <ReferenceManyField
+                        target={i.id}
+                        reference={i.reference}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      >
+                        {renderReferenceMany(i.render)}
+                      </ReferenceManyField>
+                    );
+                  case "textareafield":
+                    return (
+                      <TextField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })}
+        </View>
       </List>
     );
   }
