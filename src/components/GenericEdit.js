@@ -12,6 +12,7 @@ import {
   ReferenceArrayInput,
   ReferenceInput,
   ReferenceManyField,
+  SelectInput,
   SimpleForm,
   SimpleShowLayout,
   TabbedForm,
@@ -90,6 +91,17 @@ const GenericEdit = () => {
                         emptyText={i?.empty}
                       />
                     );
+                    case "selectfield":
+                      console.log(i.options)
+                      return (
+                        <SelectInput
+                          source={i.id}
+                          key={i.id}
+                          choices={i.choices}
+                          sortable={Boolean(i?.sort)}
+                          label={i?.label ?? undefined}
+                        />
+                      );
                   case "datetimefield":
                     return (
                       <DateTimeInput

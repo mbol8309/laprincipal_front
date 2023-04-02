@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { GET_ONE, useGetList, useGetOne } from "react-admin";
 import dataProvider from "../providers/data";
 
-export const useFront = (item) => {
-  return useGetOne("front", { id: item });
+export const useFront = (item,options={}) => {
+  return useGetOne("front", { id: item },options);
 };
 export const useFront2 = (item, queryClient) => {
   const [data, setData] = useState({});

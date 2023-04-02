@@ -10,6 +10,7 @@ import {
   ReferenceField,
   ReferenceManyField,
   ReferenceManyFieldView,
+  SelectField,
   SingleFieldList,
   TextField,
   TextInput,
@@ -76,6 +77,16 @@ const GenericList = () => {
                       <DateField
                         source={i.id}
                         key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "selectfield":
+                    return (
+                      <SelectField
+                        source={i.id}
+                        key={i.id}
+                        choices={i.choices}
                         sortable={Boolean(i?.sort)}
                         label={i?.label ?? undefined}
                       />

@@ -1,5 +1,8 @@
 import dataProvider from ".";
 import instance from "../../api/instance";
+import { HttpError } from 'react-admin';
+
+const stringifyErrors = (errors) => Object.values(errors).join();
 
 const genericDataProvider = {
   //----------------LIST
@@ -90,6 +93,9 @@ const genericDataProvider = {
         return {
           data: data.data,
         };
+      }).catch(({response})=>{
+        console.log(response)
+        throw new HttpError(stringifyErrors(response?.data?.errors),  response.status, "some wierd error")
       });
   },
   create: (resource, params) => {
@@ -103,6 +109,9 @@ const genericDataProvider = {
         return {
           data: data.data,
         };
+      }).catch(({response})=>{
+        console.log(response)
+        throw new HttpError(stringifyErrors(response?.data?.errors),  response.status, "some wierd error")
       });
   },
 };

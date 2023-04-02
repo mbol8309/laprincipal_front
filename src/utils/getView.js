@@ -3,6 +3,7 @@ import GenericEdit from "../components/GenericEdit";
 import GenericList from "../components/GenericList";
 import GenericShow from "../components/GenericShow";
 import modules from "../modules";
+import SnakeCaseToPascalCase from "./SnakeCaseToPascalCase";
 
 const getView = (resource, view, value) => {
   if (value === null || value === undefined) {
@@ -24,9 +25,9 @@ const getView = (resource, view, value) => {
   }
   if (value === "custom") {
     let formatView = String(view).charAt(0).toUpperCase() + view.slice(1);
-    let formatResource =
-      String(resource).charAt(0).toUpperCase() + resource.slice(1);
+    let formatResource = SnakeCaseToPascalCase(resource)
     let component = formatResource + formatView;
+
     if (Object.hasOwn(modules, component)) {
       return modules[component];
     }

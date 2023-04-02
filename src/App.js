@@ -18,6 +18,7 @@ import { QueryClient } from "react-query";
 import { useFront2 } from "./api/useFront";
 import getView from "./utils/getView";
 import CustomBackdrop from "./components/CustomBackdrop";
+import evaluateString from "./utils/evaluateString";
 
 function App() {
   const queryClient = new QueryClient();
@@ -46,7 +47,7 @@ function App() {
               show={getView(r.id,'show',r.show)}
               edit={getView(r.id,'edit',r.edit)}
               create={getView(r.id,'create',r.create)}
-              recordRepresentation={(record)=> r.representation ? eval("`" + r.representation + "`") : r.id }
+              recordRepresentation={evaluateString(r.recordRepresentation)}
             />
           ))}
         {/* {modules.filter(m=>Boolean(m.sidebar)).map((m) => {

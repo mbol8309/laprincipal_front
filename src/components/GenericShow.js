@@ -8,11 +8,13 @@ import {
   ReferenceField,
   ReferenceManyField,
   RichTextField,
+  SelectField,
   Show,
   ShowGuesser,
   SimpleShowLayout,
   TabbedShowLayout,
   TextField,
+  useChoices,
   useResourceContext,
 } from "react-admin";
 import { useFront } from "../api/useFront";
@@ -21,7 +23,11 @@ import { useNavigate } from "react-router-dom";
 
 const GenericShow = () => {
   const resource = useResourceContext();
-  const { isLoading, isSuccess, data: description } = useFront(`resources-${resource}`);
+  const {
+    isLoading,
+    isSuccess,
+    data: description,
+  } = useFront(`resources-${resource}`);
 
   const { fields, views } = useMemo(() => {
     if (description) {
@@ -32,7 +38,7 @@ const GenericShow = () => {
 
   const View = useMemo(() => {
     if (views?.list?.type === "simple") return SimpleShowLayout;
-    return SimpleShowLayout
+    return SimpleShowLayout;
   }, [views]);
 
   const tabbedItems = useMemo(() => {
@@ -51,65 +57,76 @@ const GenericShow = () => {
         <Button onClick={() => navigate(-1)}>Back</Button>
         <Show>
           <View>
-            {fields && fields?.map((i) => {
-              switch (i.type) {
-                case "textfield":
-                  return (
-                    <TextField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
-                case "emailfield":
-                  return (
-                    <EmailField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
-                case "datefield":
-                  return (
-                    <DateField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "reference":
-                  return (
-                    <ReferenceField
-                      source={i.id}
-                      reference={i.reference}
-                      key={i.id}
-                      sortable={Boolean(i?.sort)}
-                      label={i?.label ?? undefined}
-                      emptyText={i?.empty}
-                    />
-                  );
-                case "richtextfield":
-                  return (
-                    <RichTextField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "textareafield":
-                  return (
-                    <TextField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                default:
-                  return null;
-              }
-            })}
+            {fields &&
+              fields?.map((i) => {
+                switch (i.type) {
+                  case "textfield":
+                    return (
+                      <TextField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "emailfield":
+                    return (
+                      <EmailField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "datefield":
+                    return (
+                      <DateField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "selectfield":
+                    return (
+                      <SelectField
+                        source={i.id}
+                        key={i.id}
+                        choices={i.choices}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "reference":
+                    return (
+                      <ReferenceField
+                        source={i.id}
+                        reference={i.reference}
+                        key={i.id}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      />
+                    );
+                  case "richtextfield":
+                    return (
+                      <RichTextField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  case "textareafield":
+                    return (
+                      <TextField
+                        source={i.id}
+                        key={i.id}
+                        label={i?.label ?? undefined}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })}
           </View>
           {tabbedItems.length > 0 && (
             <TabbedShowLayout>

@@ -1,7 +1,6 @@
 import { TextInput } from "react-admin";
 
 const getParsedFilters = (filters) => {
-    console.log(filters);
     if (filters === undefined || filters === null) {
     return undefined;
   }
