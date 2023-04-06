@@ -7,7 +7,7 @@ import SnakeCaseToPascalCase from "../../utils/SnakeCaseToPascalCase";
 const SelectField = (props) => {
     const selectValue = useWatch({ name: "model_name" });
     const { isSuccess: isSuccessFields, data: dataFields } = useFront(
-        `resources-${selectValue}`,
+        `${selectValue}`,
         {
             enabled: Boolean(selectValue),
         }

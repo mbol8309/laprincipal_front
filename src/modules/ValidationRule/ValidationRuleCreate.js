@@ -4,12 +4,13 @@ import { useFront } from "../../api/useFront";
 import SnakeCaseToPascalCase from "../../utils/SnakeCaseToPascalCase";
 import { useWatch } from "react-hook-form";
 import SelectField from "./SelectField";
+import { BACKEND_SYS_RESOURCE } from "../../configs";
 
 
 
 const ValidationRuleCreate = (props) => {
     const { isSuccess: isSuccessResources, data: dataResources } =
-        useFront("resources");
+        useFront(`${BACKEND_SYS_RESOURCE}`);
 
     const resources = useMemo(
         () =>

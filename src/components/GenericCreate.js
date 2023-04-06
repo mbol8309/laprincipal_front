@@ -20,7 +20,7 @@ const GenericCreate = () => {
     isLoading,
     isSuccess,
     data: description,
-  } = useFront(`resources-${resource}`);
+  } = useFront(`${resource}`);
 
   const { fields, views } = useMemo(() => {
     if (description) {
