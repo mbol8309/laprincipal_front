@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useFront } from "../../api/useFront";
 import renderIconFromString from "../../utils/renderIconFromString";
 import replaceStringsWithContextValues from "../../utils/replaceStringWithContextValue";
+import { BACKEND_SYS_USERMENU } from "../../configs";
 
 const CustomUserMenu = (props) => {
   const logout = useLogout();
@@ -49,7 +50,7 @@ const CustomUserMenu = (props) => {
     isLoading: menuLoading,
     isSuccess,
     data: usermenu,
-  } = useFront("usermenu");
+  } = useFront(`${BACKEND_SYS_USERMENU}`);
 
   const customUserMenu = useMemo(() => {
     return usermenu?.items.map((i) => (

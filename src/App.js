@@ -26,7 +26,7 @@ function App() {
   const {
     isSuccess,
     data: resources,
-  } = useFront2("resources", queryClient);
+  } = useFront2("_sys_resources", queryClient);
 
   return (
     <div className="App">

@@ -13,11 +13,12 @@ import { useNavigate } from "react-router";
 import "./index.css";
 import CustomMenuItem from "../../components/CustomMenuItem";
 import { useFront } from "../../api/useFront";
+import { BACKEND_SYS_MENU } from "../../configs";
 
 const CustomMenu = (props) => {
   const [selected, setSelected] = useState(null);
 
-  const { isLoading, isSuccess, data: menu } = useFront("menu");
+  const { isLoading, isSuccess, data: menu } = useFront(`${BACKEND_SYS_MENU}`);
 
   return (
     <>

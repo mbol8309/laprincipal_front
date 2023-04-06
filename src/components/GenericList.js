@@ -26,7 +26,7 @@ const GenericList = () => {
     isLoading,
     isSuccess,
     data: description,
-  } = useFront(`resources-${resource}`);
+  } = useFront(`${resource}`);
 
   const { fields, filters, views } = useMemo(() => {
     if (description) {
