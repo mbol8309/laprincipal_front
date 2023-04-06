@@ -1,11 +1,21 @@
 import {
-    ArrayInputContext,
+  ArrayInputContext,
+  ChoicesContextProvider,
   ListContextProvider,
+  RecordContextProvider,
+  ReferenceArrayField,
   ReferenceArrayInput,
   ResourceContextProvider,
+  SelectArrayInput,
+  SimpleFormIterator,
+  TextInput,
+  useChoicesContext,
+  useGetList,
   useRecordContext,
   useReferenceManyFieldController,
+  useResourceContext,
 } from "react-admin";
+import { Controller, useForm } from "react-hook-form";
 
 export const ReferenceManyField = (props) => {
   const {
@@ -57,28 +67,52 @@ export const ReferenceManyInput = (props) => {
     target,
   } = props;
   const record = useRecordContext(props);
+  const { control } = useForm();
 
-  const controllerProps = useReferenceManyFieldController({
-    filter,
-    page,
-    perPage,
-    record,
-    reference,
-    resource,
-    sort,
-    source,
-    target,
-  });
+  const {
+    data: ReferenceData,
+    isLoading: isLoadingReference,
+    error: errorReference,
+  } = useGetList(reference);
 
-  console.log(controllerProps)
-  return "Not implemented yet"
+  const { isSuccess, isLoading, error, data } = useReferenceManyFieldController(
+    {
+      filter,
+      page,
+      perPage,
+      record,
+      reference,
+      resource,
+      sort,
+      source,
+      target,
+    }
+  );
 
+  console.log(data);
 
   return (
     <ResourceContextProvider value={reference}>
-        <ArrayInputContext value={controllerProps.data}>
-        {children}
-      </ArrayInputContext>
+      <SimpleFormIterator inline>
+      {/* <ChoicesContextProvider
+        value={{
+          allChoices: ReferenceData,
+          isLoading: isLoadingReference,
+          error: errorReference,
+          source,
+          resource: reference,
+        }}
+      >
+        <Controller
+          control={control}
+          name="books"
+          defaultValue={data?.map((d) => d.id)}
+          render={() => (
+            <SelectArrayInput optionText={"title"} />
+          )}
+        />
+      </ChoicesContextProvider> */}
+      </SimpleFormIterator>
     </ResourceContextProvider>
   );
 };

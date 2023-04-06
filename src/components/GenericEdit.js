@@ -12,6 +12,7 @@ import {
   ReferenceArrayInput,
   ReferenceInput,
   ReferenceManyField,
+  SelectArrayInput,
   SelectInput,
   SimpleForm,
   SimpleShowLayout,
@@ -91,17 +92,17 @@ const GenericEdit = () => {
                         emptyText={i?.empty}
                       />
                     );
-                    case "selectfield":
-                      console.log(i.options)
-                      return (
-                        <SelectInput
-                          source={i.id}
-                          key={i.id}
-                          choices={i.choices}
-                          sortable={Boolean(i?.sort)}
-                          label={i?.label ?? undefined}
-                        />
-                      );
+                  case "selectfield":
+                    console.log(i.options);
+                    return (
+                      <SelectInput
+                        source={i.id}
+                        key={i.id}
+                        choices={i.choices}
+                        sortable={Boolean(i?.sort)}
+                        label={i?.label ?? undefined}
+                      />
+                    );
                   case "datetimefield":
                     return (
                       <DateTimeInput
@@ -129,15 +130,13 @@ const GenericEdit = () => {
                         label={i?.label ?? undefined}
                       />
                     );
-                  case "textareafield":
+                  case "reference_many":
                     return (
-                      <TextInput
-                        multiline={true}
-                        source={i.id}
+                      <ReferenceArrayInput
+                        source={'books.id'}
+                        reference={i.reference}
                         key={i.id}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
+                      ></ReferenceArrayInput>
                     );
 
                   default:
@@ -145,7 +144,7 @@ const GenericEdit = () => {
                 }
               })}
           </View>
-          {tabbedItems.length > 0 && (
+          {false && tabbedItems.length > 0 && (
             <TabbedForm>
               {tabbedItems.map((tab) => (
                 <TabbedForm.Tab key={tab.id} label={tab.label}>
