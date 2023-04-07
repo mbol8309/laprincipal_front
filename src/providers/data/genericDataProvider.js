@@ -14,7 +14,8 @@ const genericDataProvider = {
         model: resource,
         per_page: perPage,
         page,
-        filters: filter
+        filters: filter,
+        ...meta
       }
     if (params.sort){
         data.sort_by = `${field} ${order}`;
@@ -35,7 +36,8 @@ const genericDataProvider = {
     return instance
       .post("getById", {
         model: resource,
-        id
+        id,
+        ...meta
       })
       .then(({ data }) => {
         return {

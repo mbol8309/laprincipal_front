@@ -1,6 +1,7 @@
 import { LinearProgress } from "@mui/material";
 import { useMemo } from "react";
 import {
+  ArrayField,
   ChipField,
   Datagrid,
   DateField,
@@ -22,11 +23,7 @@ import renderReferenceMany from "../utils/renderReferenceMany";
 
 const GenericList = () => {
   const resource = useResourceContext();
-  const {
-    isLoading,
-    isSuccess,
-    data: description,
-  } = useFront(`${resource}`);
+  const { isLoading, isSuccess, data: description } = useFront(`${resource}`);
 
   const { fields, filters, views } = useMemo(() => {
     if (description) {
@@ -45,7 +42,12 @@ const GenericList = () => {
 
   if (isSuccess) {
     return (
-      <List filters={getParsedFilters(filters)}>
+      <List
+        filters={getParsedFilters(filters)}
+        queryOptions={{
+          meta: views?.list?.meta ?? undefined,
+        }}
+      >
         <View {...(views?.list?.options ?? {})}>
           {fields &&
             fields
@@ -114,6 +116,18 @@ const GenericList = () => {
                       >
                         {renderReferenceMany(i.render)}
                       </ReferenceManyField>
+                    );
+                  case "arrayfield":
+                    return (
+                      <ArrayField
+                        source={i.id}
+                        label={i?.label ?? undefined}
+                        emptyText={i?.empty}
+                      >
+                        <SingleFieldList>
+                          <ChipField source={i?.field ?? 'id'} />
+                        </SingleFieldList>
+                      </ArrayField>
                     );
                   case "textareafield":
                     return (

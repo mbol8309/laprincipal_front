@@ -1,6 +1,8 @@
 import { Fragment, useMemo } from "react";
 import {
+  ArrayField,
   Button,
+  ChipField,
   DateField,
   EmailField,
   LinearProgress,
@@ -12,6 +14,7 @@ import {
   Show,
   ShowGuesser,
   SimpleShowLayout,
+  SingleFieldList,
   TabbedShowLayout,
   TextField,
   useChoices,
@@ -55,7 +58,9 @@ const GenericShow = () => {
     return (
       <Fragment>
         <Button onClick={() => navigate(-1)}>Back</Button>
-        <Show>
+        <Show queryOptions={{
+          meta: views?.show?.meta ?? undefined
+        }}>
           <View>
             {fields &&
               fields?.map((i) => {
@@ -86,6 +91,18 @@ const GenericShow = () => {
                         label={i?.label ?? undefined}
                       />
                     );
+                    case "arrayfield":
+                      return (
+                        <ArrayField
+                          source={i.id}
+                          label={i?.label ?? undefined}
+                          emptyText={i?.empty}
+                        >
+                          <SingleFieldList>
+                            <ChipField source={i?.field ?? 'id'} />
+                          </SingleFieldList>
+                        </ArrayField>
+                      );
                   case "selectfield":
                     return (
                       <SelectField

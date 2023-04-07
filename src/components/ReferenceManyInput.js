@@ -93,8 +93,7 @@ export const ReferenceManyInput = (props) => {
 
   return (
     <ResourceContextProvider value={reference}>
-      <SimpleFormIterator inline>
-      {/* <ChoicesContextProvider
+      <ChoicesContextProvider
         value={{
           allChoices: ReferenceData,
           isLoading: isLoadingReference,
@@ -111,8 +110,7 @@ export const ReferenceManyInput = (props) => {
             <SelectArrayInput optionText={"title"} />
           )}
         />
-      </ChoicesContextProvider> */}
-      </SimpleFormIterator>
+      </ChoicesContextProvider>
     </ResourceContextProvider>
   );
 };
