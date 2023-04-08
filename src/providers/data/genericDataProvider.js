@@ -116,6 +116,22 @@ const genericDataProvider = {
         throw new HttpError(stringifyErrors(response?.data?.errors),  response.status, "some wierd error")
       });
   },
+  delete: (resource, params) => {
+    const {id, previousData, meta} = params
+    return instance.post("delete", {
+      model: resource,
+      id,
+    })
+    .then(({ data }) => {
+      return {
+        data: data.data,
+      };
+    }).catch(({response})=>{
+      console.log(response)
+      throw new HttpError(stringifyErrors(response?.data?.errors),  response.status, "some wierd error")
+    });
+
+  }
 };
 
 export default genericDataProvider;

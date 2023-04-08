@@ -1,10 +1,13 @@
 import { LinearProgress } from "@mui/material";
-import { useMemo } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import {
   ArrayField,
+  Button,
   ChipField,
   Datagrid,
   DateField,
+  DeleteButton,
+  EditButton,
   EmailField,
   List,
   ListGuesser,
@@ -15,11 +18,29 @@ import {
   SingleFieldList,
   TextField,
   TextInput,
+  useRecordContext,
   useResourceContext,
 } from "react-admin";
 import { useFront } from "../api/useFront";
 import getParsedFilters from "../utils/getParsedFilters";
 import renderReferenceMany from "../utils/renderReferenceMany";
+import renderIconFromString from "../utils/renderIconFromString";
+import modules from "../modules";
+
+const CustomButton = ({ label, icon, item, color, onClick }) => {
+  const record = useRecordContext();
+
+  const handleOnClick = (event) => {
+    event.stopPropagation();
+    onClick && onClick(item, record);
+  };
+
+  return (
+    <Button label={label} onClick={handleOnClick} color={color ?? "primary"}>
+      {icon && renderIconFromString(icon)}
+    </Button>
+  );
+};
 
 const GenericList = () => {
   const resource = useResourceContext();
@@ -36,114 +57,171 @@ const GenericList = () => {
     if (views?.list.type === "datagrid") return Datagrid;
   }, [views]);
 
+  const [actionsOpen, setActionsOpen] = useState({});
+
+  const LocalActions = useMemo(() => {
+    return views?.list?.actions?.local?.map((action) => (
+      <CustomButton
+        key={action?.component}
+        label={action?.title}
+        icon={action?.icon}
+        color={action?.color}
+        item={action.component}
+        onClick={(key, record) =>
+          setActionsOpen((actions) => ({
+            ...actions,
+            [key]: { open: true, record },
+          }))
+        }
+      />
+    ));
+  }, [views]);
+
+  useEffect(() => {
+    let actionsComponents = views?.list?.actions?.local?.reduce(
+      (p, c) => ({
+        ...p,
+        [c.component]: {
+          open: false,
+          record: null,
+        },
+      }),
+      {}
+    );
+    setActionsOpen((actions) => ({
+      ...actionsComponents,
+      ...actions,
+    }));
+  }, [views]);
+
   if (isLoading) {
     return <LinearProgress />;
   }
 
   if (isSuccess) {
     return (
-      <List
-        filters={getParsedFilters(filters)}
-        queryOptions={{
-          meta: views?.list?.meta ?? undefined,
-        }}
-      >
-        <View {...(views?.list?.options ?? {})}>
-          {fields &&
-            fields
-              ?.filter((f) => f?.views?.includes("list"))
-              .map((i) => {
-                switch (i.type) {
-                  case "textfield":
-                    return (
-                      <TextField
-                        source={i.id}
-                        key={i.id}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "emailfield":
-                    return (
-                      <EmailField
-                        source={i.id}
-                        key={i.id}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "datefield":
-                    return (
-                      <DateField
-                        source={i.id}
-                        key={i.id}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  case "selectfield":
-                    return (
-                      <SelectField
-                        source={i.id}
-                        key={i.id}
-                        choices={i.choices}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  case "reference":
-                    return (
-                      <ReferenceField
-                        source={i.id}
-                        reference={i.reference}
-                        key={i.id}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "reference_many":
-                    return (
-                      <ReferenceManyField
-                        target={i.id}
-                        reference={i.reference}
-                        key={i.id}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      >
-                        {renderReferenceMany(i.render)}
-                      </ReferenceManyField>
-                    );
-                  case "arrayfield":
-                    return (
-                      <ArrayField
-                        source={i.id}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      >
-                        <SingleFieldList>
-                          <ChipField source={i?.field ?? 'id'} />
-                        </SingleFieldList>
-                      </ArrayField>
-                    );
-                    
-                  case "textareafield":
-                    return (
-                      <TextField
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  default:
-                    return null;
-                }
-              })}
-        </View>
-      </List>
+      <>
+        <List
+          filters={getParsedFilters(filters)}
+          queryOptions={{
+            meta: views?.list?.meta ?? undefined,
+          }}
+        >
+          <View {...(views?.list?.options ?? {})}>
+            {fields &&
+              fields
+                ?.filter((f) => f?.views?.includes("list"))
+                .map((i) => {
+                  switch (i.type) {
+                    case "textfield":
+                      return (
+                        <TextField
+                          source={i.id}
+                          key={i.id}
+                          sortable={Boolean(i?.sort)}
+                          label={i?.label ?? undefined}
+                          emptyText={i?.empty}
+                        />
+                      );
+                    case "emailfield":
+                      return (
+                        <EmailField
+                          source={i.id}
+                          key={i.id}
+                          sortable={Boolean(i?.sort)}
+                          label={i?.label ?? undefined}
+                          emptyText={i?.empty}
+                        />
+                      );
+                    case "datefield":
+                      return (
+                        <DateField
+                          source={i.id}
+                          key={i.id}
+                          sortable={Boolean(i?.sort)}
+                          label={i?.label ?? undefined}
+                        />
+                      );
+                    case "selectfield":
+                      return (
+                        <SelectField
+                          source={i.id}
+                          key={i.id}
+                          choices={i.choices}
+                          sortable={Boolean(i?.sort)}
+                          label={i?.label ?? undefined}
+                        />
+                      );
+                    case "reference":
+                      return (
+                        <ReferenceField
+                          source={i.id}
+                          reference={i.reference}
+                          key={i.id}
+                          sortable={Boolean(i?.sort)}
+                          label={i?.label ?? undefined}
+                          emptyText={i?.empty}
+                        />
+                      );
+                    case "reference_many":
+                      return (
+                        <ReferenceManyField
+                          target={i.id}
+                          reference={i.reference}
+                          key={i.id}
+                          sortable={Boolean(i?.sort)}
+                          label={i?.label ?? undefined}
+                          emptyText={i?.empty}
+                        >
+                          {renderReferenceMany(i.render)}
+                        </ReferenceManyField>
+                      );
+                    case "arrayfield":
+                      return (
+                        <ArrayField
+                          source={i.id}
+                          key={i.id}
+                          label={i?.label ?? undefined}
+                          emptyText={i?.empty}
+                        >
+                          <SingleFieldList>
+                            <ChipField source={i?.field ?? "id"} />
+                          </SingleFieldList>
+                        </ArrayField>
+                      );
+
+                    case "textareafield":
+                      return (
+                        <TextField
+                          source={i.id}
+                          key={i.id}
+                          label={i?.label ?? undefined}
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                })}
+            {views?.edit && <EditButton />}
+            {views?.delete && <DeleteButton />}
+            {LocalActions}
+          </View>
+        </List>
+        {Object.keys(actionsOpen).map((key) => {
+          if (modules && !Object.hasOwn(modules, key)) return null;
+          const Component = modules[key];
+          return (
+            <Component
+              key={key}
+              open={actionsOpen[key]?.open ?? false}
+              record={actionsOpen[key]?.record ?? null}
+              onClose={() =>
+                setActionsOpen((action) => ({ ...action, [key]: false }))
+              }
+            />
+          );
+        })}
+      </>
     );
   }
 
