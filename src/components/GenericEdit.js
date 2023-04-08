@@ -1,6 +1,7 @@
 import { RichTextInput } from "ra-input-rich-text";
 import { Fragment, useMemo } from "react";
 import {
+  AutocompleteArrayInput,
   Button,
   DateField,
   DateInput,
@@ -28,11 +29,7 @@ import { useNavigate } from "react-router-dom";
 
 const GenericEdit = () => {
   const resource = useResourceContext();
-  const {
-    isLoading,
-    isSuccess,
-    data: description,
-  } = useFront(`${resource}`);
+  const { isLoading, isSuccess, data: description } = useFront(`${resource}`);
 
   const { fields, views } = useMemo(() => {
     if (description) {
@@ -60,7 +57,22 @@ const GenericEdit = () => {
     return (
       <Fragment>
         <Button onClick={() => navigate(-1)}>Back</Button>
-        <Edit>
+        <Edit
+          queryOptions={{
+            meta: views?.edit?.meta ?? undefined,
+            select: (data) => {
+              let mapping = views?.edit?.meta?.with?.reduce((prev, curr) => {
+                prev[curr] = data[curr] && data[curr].map((c) => c?.id);
+                return prev;
+              }, {});
+
+              return {
+                ...data,
+                ...mapping,
+              };
+            },
+          }}
+        >
           <View>
             {fields &&
               fields?.map((i) => {
@@ -133,11 +145,23 @@ const GenericEdit = () => {
                   case "reference_many":
                     return (
                       <ReferenceArrayInput
-                        source={'books.id'}
+                        source={"books.id"}
                         reference={i.reference}
                         key={i.id}
                       ></ReferenceArrayInput>
                     );
+                  case "arrayfield":
+                    return (<ReferenceArrayInput
+                      source={i.id}
+                      key={i.id}
+                      label={i.label ?? undefined}
+                      reference={i.reference}
+                    >
+                      <AutocompleteArrayInput
+                        optionText={i?.field ?? 'name'}
+                        filterToQuery={(searchText) => ({ [i?.field ?? 'name']: searchText })}
+                      />
+                    </ReferenceArrayInput>);
 
                   default:
                     return null;

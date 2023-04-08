@@ -129,6 +129,7 @@ const GenericList = () => {
                         </SingleFieldList>
                       </ArrayField>
                     );
+                    
                   case "textareafield":
                     return (
                       <TextField

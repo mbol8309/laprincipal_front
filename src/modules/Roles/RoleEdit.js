@@ -109,7 +109,7 @@ const RoleEdit = (props) => {
       </Button>
       <Edit
         queryOptions={{
-          meta: { with: "permissions" },
+          meta: { with: ["permissions"] },
           select: (data) => {
             return {
               ...data,
