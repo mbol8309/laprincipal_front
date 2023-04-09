@@ -1,0 +1,1 @@
+export const stringifyErrors = (errors) => errors  ? Object.values(errors).join() : '';

@@ -70,7 +70,7 @@ const GenericList = () => {
         onClick={(key, record) =>
           setActionsOpen((actions) => ({
             ...actions,
-            [key]: { open: true, record },
+            [key]: { open: true, record, data: action },
           }))
         }
       />
@@ -84,6 +84,7 @@ const GenericList = () => {
         [c.component]: {
           open: false,
           record: null,
+          data:null
         },
       }),
       {}
@@ -215,6 +216,7 @@ const GenericList = () => {
               key={key}
               open={actionsOpen[key]?.open ?? false}
               record={actionsOpen[key]?.record ?? null}
+              data={actionsOpen[key]?.data}
               onClose={() =>
                 setActionsOpen((action) => ({ ...action, [key]: false }))
               }

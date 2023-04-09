@@ -1,8 +1,7 @@
 import dataProvider from ".";
 import instance from "../../api/instance";
 import { HttpError } from 'react-admin';
-
-const stringifyErrors = (errors) => Object.values(errors).join();
+import { stringifyErrors } from "../../utils";
 
 const genericDataProvider = {
   //----------------LIST
