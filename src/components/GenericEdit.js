@@ -26,6 +26,7 @@ import { useFront } from "../api/useFront";
 import renderReferenceMany from "../utils/renderReferenceMany";
 import { ReferenceManyInput } from "./ReferenceManyInput";
 import { useNavigate } from "react-router-dom";
+import FormGenericGenerator from "./FormGenericGenerator";
 
 const GenericEdit = () => {
   const resource = useResourceContext();
@@ -42,10 +43,10 @@ const GenericEdit = () => {
     return fields?.filter((i) => ["reference_many"].includes(i.type)) ?? [];
   }, [fields]);
 
-  const View = useMemo(() => {
-    if (views?.list?.type === "simple") return SimpleForm;
-    return SimpleForm;
-  }, [views]);
+  // const View = useMemo(() => {
+  //   if (views?.list?.type === "simple") return SimpleForm;
+  //   return SimpleForm;
+  // }, [views]);
 
   const navigate = useNavigate();
 
@@ -73,101 +74,7 @@ const GenericEdit = () => {
             },
           }}
         >
-          <View>
-            {fields &&
-              fields?.map((i) => {
-                switch (i.type) {
-                  case "textfield":
-                    return (
-                      <TextInput
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "emailfield":
-                    return (
-                      <TextInput
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "datefield":
-                    return (
-                      <DateInput
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "selectfield":
-                    console.log(i.options);
-                    return (
-                      <SelectInput
-                        source={i.id}
-                        key={i.id}
-                        choices={i.choices}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  case "datetimefield":
-                    return (
-                      <DateTimeInput
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  case "reference":
-                    return (
-                      <ReferenceInput
-                        source={i.id}
-                        reference={i.reference}
-                        key={i.id}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "richtextfield":
-                    return (
-                      <RichTextInput
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  case "reference_many":
-                    return (
-                      <ReferenceArrayInput
-                        source={"books.id"}
-                        reference={i.reference}
-                        key={i.id}
-                      ></ReferenceArrayInput>
-                    );
-                  case "arrayfield":
-                    return (<ReferenceArrayInput
-                      source={i.id}
-                      key={i.id}
-                      label={i.label ?? undefined}
-                      reference={i.reference}
-                    >
-                      <AutocompleteArrayInput
-                        optionText={i?.field ?? 'name'}
-                        filterToQuery={(searchText) => ({ [i?.field ?? 'name']: searchText })}
-                      />
-                    </ReferenceArrayInput>);
-
-                  default:
-                    return null;
-                }
-              })}
-          </View>
+          <FormGenericGenerator fields={fields} type={views?.list?.type}/>
           {false && tabbedItems.length > 0 && (
             <TabbedForm>
               {tabbedItems.map((tab) => (

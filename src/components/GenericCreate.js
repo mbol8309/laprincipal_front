@@ -13,6 +13,7 @@ import {
   useResourceContext,
 } from "react-admin";
 import { useFront } from "../api/useFront";
+import FormGenericGenerator from "./FormGenericGenerator";
 
 const GenericCreate = () => {
   const resource = useResourceContext();
@@ -29,10 +30,10 @@ const GenericCreate = () => {
     return {};
   }, [description]);
 
-  const View = useMemo(() => {
-    if (views?.list?.type === "simple") return SimpleForm;
-    return SimpleForm;
-  }, [views]);
+  // const View = useMemo(() => {
+  //   if (views?.list?.type === "simple") return SimpleForm;
+  //   return SimpleForm;
+  // }, [views]);
 
   if (isLoading) {
     return <LinearProgress />;
@@ -41,60 +42,7 @@ const GenericCreate = () => {
   if (isSuccess) {
     return (
       <Create>
-        <View>
-          {fields &&
-            fields?.map((i) => {
-              switch (i.type) {
-                case "textfield":
-                  return <TextInput source={i.id} key={i.id} />;
-                case "emailfield":
-                  return <TextInput source={i.id} key={i.id} />;
-                case "datefield":
-                  return <DateInput source={i.id} key={i.id} />;
-                case "selectfield":
-                  return (
-                    <SelectInput
-                      source={i.id}
-                      key={i.id}
-                      choices={i.choices}
-                      sortable={Boolean(i?.sort)}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "datetimefield":
-                  return <DateTimeInput source={i.id} key={i.id} />;
-                case "reference":
-                  return (
-                    <ReferenceInput
-                      source={i.id}
-                      reference={i.reference}
-                      key={i.id}
-                      sortable={Boolean(i?.sort)}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "richtextfield":
-                  return (
-                    <RichTextField
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                case "textareafield":
-                  return (
-                    <TextInput
-                      multiline={true}
-                      source={i.id}
-                      key={i.id}
-                      label={i?.label ?? undefined}
-                    />
-                  );
-                default:
-                  return null;
-              }
-            })}
-        </View>
+        <FormGenericGenerator fields={fields} type={views?.list?.type}/>
       </Create>
     );
   }

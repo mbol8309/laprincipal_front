@@ -4,15 +4,18 @@ import ValidationRuleCreate from "./ValidationRule/ValidationRuleCreate";
 import BannAuthorAction from "./Author/BannAuthorAction";
 import RoleEdit from "./Roles/RoleEdit";
 import LocalActionEndpoint from "./_system/LocalActionEndpoint";
+import LocalActionFormEndpoint from "./_system/LocalActionFormEndpoint";
 
 const modules = {
-    SettingList,
-    ValidationRuleCreate,
-    ValidationRuleEdit,
-    RoleEdit,
-    //Author
-    BannAuthorAction,
-    LocalActionEndpoint
+  //system
+  LocalActionEndpoint,
+  LocalActionFormEndpoint,
+  SettingList,
+  ValidationRuleCreate,
+  ValidationRuleEdit,
+
+  //Author
+  BannAuthorAction,
 };
 
-export default modules
+export default modules;

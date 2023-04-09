@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { useResourceContext } from "react-admin";
+import { Form, useResourceContext } from "react-admin";
 import { useMutation } from "react-query";
 import instance from "../../api/instance";
 import evaluateString from "../../utils/evaluateString";
@@ -17,16 +17,26 @@ import {
   CheckCircle as CheckCircleIcon,
 } from "@mui/icons-material";
 import { stringifyErrors } from "../../utils";
+import FormGenericGenerator from "../../components/FormGenericGenerator";
+import { useForm } from "react-hook-form";
 
-const LocalActionEndpoint = ({ open, onClose, record, data, ...other }) => {
+const LocalActionFormEndpoint = ({ open, onClose, record, data, ...other }) => {
   const resource = useResourceContext();
-  const [localOpen, setLocalOpen] = useState(false);
+  
   const recordID = useMemo(() => {
     return record?.id;
   }, [record]);
 
   const endpoint = useMemo(() => {
     return data?.endpoint;
+  }, [data]);
+
+  const fields = useMemo(() => {
+    return data?.fields;
+  }, [data]);
+
+  const type = useMemo(() => {
+    return data?.type;
   }, [data]);
 
   const {
@@ -40,11 +50,12 @@ const LocalActionEndpoint = ({ open, onClose, record, data, ...other }) => {
     reset
   } = useMutation(
     ["action", resource, recordID, endpoint],
-    (_data) =>
+    ({ resource, id, action, ...other }) =>
       instance.post("action", {
-        model: _data.resource,
-        id: _data.id,
-        action: _data.endpoint,
+        model: resource,
+        id,
+        action,
+        ...other,
       })
     // {
     //   select: (data) => {
@@ -55,15 +66,14 @@ const LocalActionEndpoint = ({ open, onClose, record, data, ...other }) => {
   );
 
   const handleClose = () => {
-    if (!isIdle && !isLoading) {
-      setLocalOpen(false);
-      reset()
+    if (!isLoading) {
       onClose && onClose();
+      reset()
     }
   };
 
   const actionTitle = useMemo(() => {
-    if (recordID && resource) {
+    if (recordID && resource && record) {
       if (!data?.dialogTitle) return `Action on ${resource}#${recordID}`;
       let f = evaluateString(data.dialogTitle);
       return f(record);
@@ -71,15 +81,24 @@ const LocalActionEndpoint = ({ open, onClose, record, data, ...other }) => {
     return null;
   }, [data, resource, recordID, record]);
 
-  useEffect(() => {
-    if (open && resource && recordID && endpoint) {
-      setLocalOpen(open);
-      mutate({ resource, id: recordID, endpoint });
-    }
-  }, [resource, recordID, endpoint, mutate, open]);
+  // useEffect(() => {
+  //   if (open && resource && recordID && endpoint) {
+  //     setLocalOpen(open);
+  //     mutate({ resource, id: recordID, endpoint });
+  //   }
+  // }, [resource, recordID, endpoint, mutate, open]);
+
+  const onSubmit = (data) => {
+    mutate({
+      id: recordID,
+      resource,
+      action: endpoint,
+      data,
+    });
+  };
 
   return (
-    <Dialog open={localOpen} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{actionTitle}</DialogTitle>
       <DialogContent>
         {isLoading && (
@@ -125,9 +144,16 @@ const LocalActionEndpoint = ({ open, onClose, record, data, ...other }) => {
             </Typography>
           </Stack>
         )}
+        {isIdle && (
+          <FormGenericGenerator
+            fields={fields}
+            type={type}
+            onSubmit={onSubmit}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
 };
 
-export default LocalActionEndpoint;
+export default LocalActionFormEndpoint;
