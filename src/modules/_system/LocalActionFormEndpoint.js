@@ -7,8 +7,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { Form, useResourceContext } from "react-admin";
+import { useMemo } from "react";
+import { useResourceContext } from "react-admin";
 import { useMutation } from "react-query";
 import instance from "../../api/instance";
 import evaluateString from "../../utils/evaluateString";
@@ -18,7 +18,6 @@ import {
 } from "@mui/icons-material";
 import { stringifyErrors } from "../../utils";
 import FormGenericGenerator from "../../components/FormGenericGenerator";
-import { useForm } from "react-hook-form";
 
 const LocalActionFormEndpoint = ({ open, onClose, record, data, ...other }) => {
   const resource = useResourceContext();
@@ -57,12 +56,6 @@ const LocalActionFormEndpoint = ({ open, onClose, record, data, ...other }) => {
         action,
         ...other,
       })
-    // {
-    //   select: (data) => {
-    //     console.log(data);
-    //     return data?.data?.data;
-    //   },
-    // }
   );
 
   const handleClose = () => {

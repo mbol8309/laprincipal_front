@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Modal,
   Stack,
   Typography,
 } from "@mui/material";
@@ -46,12 +45,6 @@ const LocalActionEndpoint = ({ open, onClose, record, data, ...other }) => {
         id: _data.id,
         action: _data.endpoint,
       })
-    // {
-    //   select: (data) => {
-    //     console.log(data);
-    //     return data?.data?.data;
-    //   },
-    // }
   );
 
   const handleClose = () => {
