@@ -57,7 +57,7 @@ const GenericEdit = () => {
   if (isSuccess) {
     return (
       <Fragment>
-        <Button onClick={() => navigate(-1)}>Back</Button>
+        <Button onClick={() => navigate(-1)} label="Back"/>
         <Edit
           queryOptions={{
             meta: views?.edit?.meta ?? undefined,

@@ -19,7 +19,6 @@ const CustomMenu = (props) => {
   const [selected, setSelected] = useState(null);
 
   const { isLoading, isSuccess, data: menu } = useFront(`${BACKEND_SYS_MENU}`);
-
   return (
     <>
       {isLoading && <LinearProgress />}

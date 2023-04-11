@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import {
+  Button,
   Create,
   DateInput,
   DateTimeInput,
@@ -14,14 +15,12 @@ import {
 } from "react-admin";
 import { useFront } from "../api/useFront";
 import FormGenericGenerator from "./FormGenericGenerator";
+import { useNavigate } from "react-router";
 
 const GenericCreate = () => {
   const resource = useResourceContext();
-  const {
-    isLoading,
-    isSuccess,
-    data: description,
-  } = useFront(`${resource}`);
+  const { isLoading, isSuccess, data: description } = useFront(`${resource}`);
+  const navigate = useNavigate();
 
   const { fields, views } = useMemo(() => {
     if (description) {
@@ -41,9 +40,12 @@ const GenericCreate = () => {
 
   if (isSuccess) {
     return (
-      <Create>
-        <FormGenericGenerator fields={fields} type={views?.list?.type}/>
-      </Create>
+      <Fragment>
+        <Button onClick={() => navigate(-1)} label="Back" />
+        <Create>
+          <FormGenericGenerator fields={fields} type={views?.list?.type} />
+        </Create>
+      </Fragment>
     );
   }
   return null;

@@ -28,7 +28,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                   source={i.id}
                   key={i.id}
                   label={i?.label ?? undefined}
-                  emptyText={i?.empty}
+                  disabled={i?.disabled ?? false}
                 />
               );
             case "emailfield":
@@ -37,7 +37,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                   source={i.id}
                   key={i.id}
                   label={i?.label ?? undefined}
-                  emptyText={i?.empty}
+                  disabled={i?.disabled ?? false}
                 />
               );
             case "datefield":
@@ -46,7 +46,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                   source={i.id}
                   key={i.id}
                   label={i?.label ?? undefined}
-                  emptyText={i?.empty}
+                  disabled={i?.disabled ?? false}
                 />
               );
             case "selectfield":
@@ -57,6 +57,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                   choices={i.choices}
                   sortable={Boolean(i?.sort)}
                   label={i?.label ?? undefined}
+                  disabled={i?.disabled ?? false}
                 />
               );
             case "datetimefield":
@@ -65,6 +66,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                   source={i.id}
                   key={i.id}
                   label={i?.label ?? undefined}
+                  disabled={i?.disabled ?? false}
                 />
               );
             case "reference":
@@ -75,7 +77,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                   key={i.id}
                   sortable={Boolean(i?.sort)}
                   label={i?.label ?? undefined}
-                  emptyText={i?.empty}
+                  disabled={i?.disabled ?? false}
                 />
               );
             case "richtextfield":
@@ -84,6 +86,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                   source={i.id}
                   key={i.id}
                   label={i?.label ?? undefined}
+                  disabled={i?.disabled ?? false}
                 />
               );
             case "reference_many":
@@ -107,6 +110,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit }) => {
                     filterToQuery={(searchText) => ({
                       [i?.field ?? "name"]: searchText,
                     })}
+                    disabled={i?.disabled ?? false}
                   />
                 </ReferenceArrayInput>
               );

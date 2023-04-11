@@ -57,7 +57,7 @@ const GenericShow = () => {
   if (isSuccess) {
     return (
       <Fragment>
-        <Button onClick={() => navigate(-1)}>Back</Button>
+        <Button onClick={() => navigate(-1)} label="Back"/>
         <Show queryOptions={{
           meta: views?.show?.meta ?? undefined
         }}>
@@ -95,6 +95,7 @@ const GenericShow = () => {
                       return (
                         <ArrayField
                           source={i.id}
+                          key={i.id}
                           label={i?.label ?? undefined}
                           emptyText={i?.empty}
                         >
