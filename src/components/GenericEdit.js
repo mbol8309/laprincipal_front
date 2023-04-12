@@ -74,7 +74,7 @@ const GenericEdit = () => {
             },
           }}
         >
-          <FormGenericGenerator fields={fields} type={views?.list?.type}/>
+          <FormGenericGenerator fields={fields} type={views?.list?.type} layout={views?.edit?.layout|| views?.create?.layout || views?.show?.layout  }/>
           {false && tabbedItems.length > 0 && (
             <TabbedForm>
               {tabbedItems.map((tab) => (

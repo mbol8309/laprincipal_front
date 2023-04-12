@@ -54,9 +54,9 @@ const GenericList = () => {
     return {};
   }, [description]);
 
-  const View = useMemo(() => {
-    if (views?.list.type === "datagrid") return Datagrid;
-  }, [views]);
+  // const View = useMemo(() => {
+  //   if (views?.list.type === "datagrid") return Datagrid;
+  // }, [views]);
 
   const [actionsOpen, setActionsOpen] = useState({});
 

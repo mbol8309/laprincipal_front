@@ -10,15 +10,17 @@ import {
   SimpleForm,
   TextInput,
 } from "react-admin";
+import FormLayoutGenerator from "./FormLayoutGenerator";
 
-const FormGenericGenerator = ({ fields, type, onSubmit }) => {
+const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
   const View = useMemo(() => {
+    if (layout !== null) return FormLayoutGenerator;
     if (type === "simple") return SimpleForm;
     return SimpleForm;
-  }, [type]);
+  }, [type, layout]);
 
   return (
-    <View onSubmit={onSubmit ?? undefined}> 
+    <View onSubmit={onSubmit ?? undefined} layout={layout ?? undefined}>
       {fields &&
         fields?.map((i) => {
           switch (i.type) {

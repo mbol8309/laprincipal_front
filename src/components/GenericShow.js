@@ -24,6 +24,7 @@ import { useFront } from "../api/useFront";
 import renderReferenceMany from "../utils/renderReferenceMany";
 import { useNavigate } from "react-router-dom";
 import FieldGenericGenerator from "./FieldGenericGenerator";
+import LayoutGenerator from "./LayoutGenerator";
 
 const GenericShow = () => {
   const resource = useResourceContext();
@@ -40,10 +41,10 @@ const GenericShow = () => {
     return {};
   }, [description]);
 
-  const View = useMemo(() => {
-    if (views?.list?.type === "simple") return SimpleShowLayout;
-    return SimpleShowLayout;
-  }, [views]);
+  // const View = useMemo(() => {
+  //   if (views?.list?.type === "simple") return SimpleShowLayout;
+  //   return SimpleShowLayout;
+  // }, [views]);
 
   const tabbedItems = useMemo(() => {
     return fields?.filter((i) => ["reference_many"].includes(i.type)) ?? [];
@@ -62,7 +63,7 @@ const GenericShow = () => {
         <Show queryOptions={{
           meta: views?.show?.meta ?? undefined
         }}>
-          <FieldGenericGenerator type={views?.show?.type} fields={fields}/>
+          <FieldGenericGenerator type={views?.show?.type} fields={fields} layout={views?.show?.layout || views?.create?.layout || views?.edit?.layout}/>
           {tabbedItems.length > 0 && (
             <TabbedShowLayout>
               {tabbedItems.map((tab) => (
