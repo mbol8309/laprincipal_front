@@ -23,6 +23,7 @@ import {
 import { useFront } from "../api/useFront";
 import renderReferenceMany from "../utils/renderReferenceMany";
 import { useNavigate } from "react-router-dom";
+import FieldGenericGenerator from "./FieldGenericGenerator";
 
 const GenericShow = () => {
   const resource = useResourceContext();
@@ -61,91 +62,7 @@ const GenericShow = () => {
         <Show queryOptions={{
           meta: views?.show?.meta ?? undefined
         }}>
-          <View>
-            {fields &&
-              fields?.map((i) => {
-                switch (i.type) {
-                  case "textfield":
-                    return (
-                      <TextField
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "emailfield":
-                    return (
-                      <EmailField
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "datefield":
-                    return (
-                      <DateField
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                    case "arrayfield":
-                      return (
-                        <ArrayField
-                          source={i.id}
-                          key={i.id}
-                          label={i?.label ?? undefined}
-                          emptyText={i?.empty}
-                        >
-                          <SingleFieldList>
-                            <ChipField source={i?.field ?? 'id'} />
-                          </SingleFieldList>
-                        </ArrayField>
-                      );
-                  case "selectfield":
-                    return (
-                      <SelectField
-                        source={i.id}
-                        key={i.id}
-                        choices={i.choices}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  case "reference":
-                    return (
-                      <ReferenceField
-                        source={i.id}
-                        reference={i.reference}
-                        key={i.id}
-                        sortable={Boolean(i?.sort)}
-                        label={i?.label ?? undefined}
-                        emptyText={i?.empty}
-                      />
-                    );
-                  case "richtextfield":
-                    return (
-                      <RichTextField
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  case "textareafield":
-                    return (
-                      <TextField
-                        source={i.id}
-                        key={i.id}
-                        label={i?.label ?? undefined}
-                      />
-                    );
-                  default:
-                    return null;
-                }
-              })}
-          </View>
+          <FieldGenericGenerator type={views?.show?.type} fields={fields}/>
           {tabbedItems.length > 0 && (
             <TabbedShowLayout>
               {tabbedItems.map((tab) => (

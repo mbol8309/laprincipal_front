@@ -26,6 +26,7 @@ import getParsedFilters from "../utils/getParsedFilters";
 import renderReferenceMany from "../utils/renderReferenceMany";
 import renderIconFromString from "../utils/renderIconFromString";
 import modules from "../modules";
+import FieldGenericGenerator from "./FieldGenericGenerator";
 
 const CustomButton = ({ label, icon, item, color, onClick }) => {
   const record = useRecordContext();
@@ -84,7 +85,7 @@ const GenericList = () => {
         [c.component]: {
           open: false,
           record: null,
-          data:null
+          data: null,
         },
       }),
       {}
@@ -108,105 +109,11 @@ const GenericList = () => {
             meta: views?.list?.meta ?? undefined,
           }}
         >
-          <View {...(views?.list?.options ?? {})}>
-            {fields &&
-              fields
-                ?.filter((f) => f?.views?.includes("list"))
-                .map((i) => {
-                  switch (i.type) {
-                    case "textfield":
-                      return (
-                        <TextField
-                          source={i.id}
-                          key={i.id}
-                          sortable={Boolean(i?.sort)}
-                          label={i?.label ?? undefined}
-                          emptyText={i?.empty}
-                        />
-                      );
-                    case "emailfield":
-                      return (
-                        <EmailField
-                          source={i.id}
-                          key={i.id}
-                          sortable={Boolean(i?.sort)}
-                          label={i?.label ?? undefined}
-                          emptyText={i?.empty}
-                        />
-                      );
-                    case "datefield":
-                      return (
-                        <DateField
-                          source={i.id}
-                          key={i.id}
-                          sortable={Boolean(i?.sort)}
-                          label={i?.label ?? undefined}
-                        />
-                      );
-                    case "selectfield":
-                      return (
-                        <SelectField
-                          source={i.id}
-                          key={i.id}
-                          choices={i.choices}
-                          sortable={Boolean(i?.sort)}
-                          label={i?.label ?? undefined}
-                        />
-                      );
-                    case "reference":
-                      return (
-                        <ReferenceField
-                          source={i.id}
-                          reference={i.reference}
-                          key={i.id}
-                          sortable={Boolean(i?.sort)}
-                          label={i?.label ?? undefined}
-                          emptyText={i?.empty}
-                        />
-                      );
-                    case "reference_many":
-                      return (
-                        <ReferenceManyField
-                          target={i.id}
-                          reference={i.reference}
-                          key={i.id}
-                          sortable={Boolean(i?.sort)}
-                          label={i?.label ?? undefined}
-                          emptyText={i?.empty}
-                        >
-                          {renderReferenceMany(i.render)}
-                        </ReferenceManyField>
-                      );
-                    case "arrayfield":
-                      return (
-                        <ArrayField
-                          source={i.id}
-                          key={i.id}
-                          label={i?.label ?? undefined}
-                          emptyText={i?.empty}
-                        >
-                          <SingleFieldList>
-                            <ChipField source={i?.field ?? "id"} />
-                          </SingleFieldList>
-                        </ArrayField>
-                      );
-
-                    case "textareafield":
-                      return (
-                        <TextField
-                          source={i.id}
-                          key={i.id}
-                          label={i?.label ?? undefined}
-                        />
-                      );
-                    default:
-                      return null;
-                  }
-                })}
+          <FieldGenericGenerator type={views?.list?.type} fields={fields}>
             {views?.edit && <EditButton />}
             {views?.delete && <DeleteButton />}
             {LocalActions}
-          </View>
+          </FieldGenericGenerator>
         </List>
         {Object.keys(actionsOpen).map((key) => {
           if (modules && !Object.hasOwn(modules, key)) return null;
