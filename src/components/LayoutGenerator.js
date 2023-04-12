@@ -31,7 +31,11 @@ const LayoutGenerator = ({ layout, children }) => {
                   return field &&
                     isValidElement(field) &&
                     field.key === column.id ? (
-                    <Labeled key={column.id} className={"ra-field"}>
+                    <Labeled
+                      key={column.id}
+                      className={"ra-field"}
+                      style={{ width: "100%" }}
+                    >
                       {field}
                     </Labeled>
                   ) : null;
