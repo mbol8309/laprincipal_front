@@ -109,7 +109,7 @@ const GenericList = () => {
             meta: views?.list?.meta ?? undefined,
           }}
         >
-          <FieldGenericGenerator type={views?.list?.type} fields={fields}>
+          <FieldGenericGenerator type={views?.list?.type} fields={fields} options={views?.list?.options}>
             {views?.edit && <EditButton />}
             {views?.delete && <DeleteButton />}
             {LocalActions}

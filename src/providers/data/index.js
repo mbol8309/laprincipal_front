@@ -14,9 +14,11 @@ import {
     GET_MANY_REFERENCE,
   } from 'react-admin';
 import jsonParserDataProvider from "./jsonParserDataProvider";
+import fileDataProvider from "./fileDataProvider";
 
 const dataProviders = [
   { dataProvider: restDataProvider, resource: ['setting'] },
+  { dataProvider: fileDataProvider, resource: ['file'] },
   { dataProvider: jsonParserDataProvider, resource: ['front'] },
   { dataProvider: genericDataProvider, resource: [] },
 ];

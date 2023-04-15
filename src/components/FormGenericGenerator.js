@@ -11,6 +11,7 @@ import {
   TextInput,
 } from "react-admin";
 import FormLayoutGenerator from "./FormLayoutGenerator";
+import FileField from "./FileFields";
 
 const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
   const View = useMemo(() => {
@@ -116,6 +117,15 @@ const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
                   />
                 </ReferenceArrayInput>
               );
+            case "filefield":
+                return (
+                  <FileField
+                    source={i.id}
+                    key={i.id}
+                    label={i?.label ?? undefined}
+                    disabled={i?.disabled ?? false}
+                  />
+                );
 
             default:
               return null;
