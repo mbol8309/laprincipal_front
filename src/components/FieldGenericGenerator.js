@@ -18,7 +18,13 @@ import { useCallback, useMemo } from "react";
 import LayoutGenerator from "./LayoutGenerator";
 import FileField from "./FileFields";
 
-const FieldGenericGenerator = ({ fields, type, children, layout=null, options={} }) => {
+const FieldGenericGenerator = ({
+  fields,
+  type,
+  children,
+  layout = null,
+  options = {},
+}) => {
   const View = useMemo(() => {
     if (layout !== null) return LayoutGenerator;
     if (type === "simple") return SimpleShowLayout;
@@ -96,27 +102,28 @@ const FieldGenericGenerator = ({ fields, type, children, layout=null, options={}
         return (
           <TextField source={i.id} key={i.id} label={i?.label ?? undefined} />
         );
-        case "filefield":
-          return (
-            <FileField
-              source={i.id}
-              title="name"
-              download={true}
-              key={i.id}
-              count={i?.count ?? 1}
-              label={i?.label ?? undefined}
-            />
-          );
+      case "filefield":
+        return (
+          <FileField
+            source={i.id}
+            title="name"
+            download={true}
+            key={i.id}
+            count={i?.count ?? 1}
+            label={i?.label ?? undefined}
+          />
+        );
       default:
         return null;
     }
   }, []);
 
   return (
-    <View layout={layout ?? undefined} {...options} >
-      {fields && fields?.map((i) => {
-        return renderField(i)
-      })}
+    <View layout={layout ?? undefined} {...options}>
+      {fields &&
+        fields?.map((i) => {
+          return renderField(i);
+        })}
       {children}
     </View>
   );

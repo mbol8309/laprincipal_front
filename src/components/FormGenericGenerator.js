@@ -11,6 +11,7 @@ import {
   TextInput,
 } from "react-admin";
 import FormLayoutGenerator from "./FormLayoutGenerator";
+import FileInput from "./FileInput";
 import FileField from "./FileFields";
 
 const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
@@ -117,14 +118,24 @@ const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
                   />
                 </ReferenceArrayInput>
               );
-            case "filefield":
+              case "filefield":
                 return (
-                  <FileField
+                  <FileInput
                     source={i.id}
+                    title="name"
+                    download={true}
                     key={i.id}
+                    count={i?.count ?? 1}
                     label={i?.label ?? undefined}
-                    disabled={i?.disabled ?? false}
-                  />
+                  >
+                    <FileField
+                    source={i.id}
+                    title="name"
+                    download={true}
+                    key={i.id}
+                    count={i?.count ?? 1}
+                    label={i?.label ?? undefined}/>
+                  </FileInput>
                 );
 
             default:

@@ -8,6 +8,7 @@ import {
   useResourceContext,
   useTranslate,
 } from "react-admin";
+import { FileInputPreview } from "./FileInputPreview";
 
 const FileField = ({
   source,
@@ -20,6 +21,7 @@ const FileField = ({
   download,
   ping,
   rel,
+  accept,
   ...rest
 }) => {
   const resource = useResourceContext();
@@ -71,11 +73,15 @@ const FileField = ({
                 rel={rel}
                 variant="body2"
               >
-                {hasThumbnail ? (
-                  <img src={file.thumbnail_path} alt={file.name} />
-                ) : (
-                  fileTitleValue
-                )}
+                <FileInputPreview
+                key={index}
+                file={file}
+                title={title}
+              >
+                {/* <RecordContextProvider value={record}>
+                  {childrenElement}
+                </RecordContextProvider> */}
+              </FileInputPreview>
               </Link>
             </li>
           );
