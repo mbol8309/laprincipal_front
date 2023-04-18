@@ -29,6 +29,26 @@ const fileDataProvider = {
       };
     });
   },
+  create:(resource, params) =>{
+    const {data} = params;
+    const alreadyUploaded = data.filter(d=>!Boolean(d.rawFile)).map(d=>d.id);
+    const toUpload = data.filter(d=>Boolean(d.rawFile));
+    const promises = toUpload.map(file=>{
+      let fm = new FormData();
+      fm.append('file',file.rawFile);
+      fm.append('function',file.function)
+      return instance.post('file/upload', fm,{
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+    })
+    return Promise.all(promises).then((results) =>{
+      let newIds = results.map(r=>r.data.id);
+      return [...newIds,...alreadyUploaded]
+    })
+
+  },
   //---------------------UPDATE
   update: (resource, params) => {
     const { id, data } = params;

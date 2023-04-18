@@ -1,7 +1,8 @@
 import dataProvider from ".";
 import instance from "../../api/instance";
-import { HttpError } from 'react-admin';
+import { HttpError, useDataProvider } from 'react-admin';
 import { stringifyErrors } from "../../utils";
+import fileDataProvider from "./fileDataProvider";
 
 const genericDataProvider = {
   //----------------LIST
@@ -82,8 +83,15 @@ const genericDataProvider = {
         };
       });
   },
-  update: (resource, params) => {
+  update: async (resource, params) => {
     const { id, data, previousData, meta } = params;
+    if (data?.files){
+      //has files
+      let fileIds = await fileDataProvider.create('files',{
+        data:data.files
+      });
+      data.files = fileIds;
+    }
     return instance
       .post("updateById", {
         model: resource,

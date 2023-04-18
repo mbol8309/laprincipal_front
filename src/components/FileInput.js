@@ -78,7 +78,6 @@ const FileInput = ({
     if (!(file instanceof File)) {
       return file;
     }
-    console.log(file);
     const type = file.type;
     let preview = null;
     if (images_types.includes(type)) {
@@ -92,6 +91,7 @@ const FileInput = ({
       rawFile: file,
       thumbnail_path: preview,
       name: file.name,
+      function: source
     };
 
     return transformedFile;
@@ -113,25 +113,6 @@ const FileInput = ({
     return transformFile(files);
   };
 
-  //   const { field: {onChange, value}, fieldState, formState:{isSubmitted} } = useController({
-  //     name: source,
-  //     defaultValue: data,
-  //     // rules: {
-  //     //     validate: async value => {
-  //     //         if (!sanitizedValidate) return true;
-  //     //         const error = await sanitizedValidate(
-  //     //             value,
-  //     //             formContext.getValues(),
-  //     //             props
-  //     //         );
-
-  //     //         if (!error) return true;
-  //     //         return getValidationErrorMessage(error);
-  //     //     },
-  //     // },
-  //     ...options,
-  // });
-
   const {
     id,
     field: { onChange, value },
@@ -141,14 +122,13 @@ const FileInput = ({
   } = useInput({
     format: format || transformFiles,
     parse: parse || transformFiles,
-    source,
+    source: "files",
     validate,
     defaultValue: data,
     ...rest,
   });
   const { isTouched, error, invalid } = fieldState;
   const files = value;
-  console.log(value);
 
   const onDrop = (newFiles, rejectedFiles, event) => {
     const updatedFiles = multiple ? [...files, ...newFiles] : [...newFiles];
@@ -246,7 +226,7 @@ const FileInput = ({
               <FileInputPreview
                 key={index}
                 file={file}
-                onRemove={onRemove(file.path)}
+                onRemove={onRemove(file)}
                 className={FileInputClasses.removeButton}
                 title={title}
               >
