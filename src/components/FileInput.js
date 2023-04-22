@@ -1,7 +1,13 @@
 import styled from "@emotion/styled";
-import { FormHelperText, Grid } from "@mui/material";
+import { Collapse, FormHelperText, Grid } from "@mui/material";
 import get from "lodash/get";
-import { Children, ReactElement, isValidElement, useMemo } from "react";
+import {
+  Children,
+  ReactElement,
+  isValidElement,
+  useMemo,
+  useState,
+} from "react";
 import { useDropzone, DropzoneOptions } from "react-dropzone";
 import clsx from "clsx";
 
@@ -21,15 +27,17 @@ import {
   useTranslate,
 } from "react-admin";
 import { FileInputPreview } from "./FileInputPreview";
-import { useController } from "react-hook-form";
+import UIDialog from "./UIDialog";
+import Cropper from "react-easy-crop";
+import ImageCrop from "./ImageCrop";
 
-const images_types = ["application/jpg", "application/png"];
+const images_types = ["image/jpg", "image/jpeg", "image/png"];
 const other_types = ["application/pdf"];
 
 const FileInput = ({
   source,
   label,
-  accept,
+  filetype,
   className,
   emptyText,
   count = 1,
@@ -44,6 +52,8 @@ const FileInput = ({
   inputProps: inputPropsOptions,
   maxSize,
   minSize,
+  maxWidth,
+  maxHeight,
   labelMultiple = "ra.input.file.upload_several",
   labelSingle = "ra.input.file.upload_single",
   options = {},
@@ -74,6 +84,25 @@ const FileInput = ({
     },
   });
 
+  const accept = useMemo(() => {
+    //convert string like, image, document, excel, pdf or so to extensions
+    let fts = String(filetype).split(",");
+
+    fts = fts.map((ft) => {
+      switch (ft) {
+        case "image":
+          return "image/*";
+        case "pdf":
+          return "application/pdf";
+        default:
+          return null;
+      }
+    });
+
+    fts = fts.join(",");
+    return fts;
+  }, [filetype]);
+
   const transformFile = (file) => {
     if (!(file instanceof File)) {
       return file;
@@ -91,7 +120,7 @@ const FileInput = ({
       rawFile: file,
       thumbnail_path: preview,
       name: file.name,
-      function: source
+      function: source,
     };
 
     return transformedFile;
@@ -122,22 +151,18 @@ const FileInput = ({
   } = useInput({
     format: format || transformFiles,
     parse: parse || transformFiles,
-    source: "files",
+    source: `files.${source}`,
     validate,
     defaultValue: data,
     ...rest,
   });
   const { isTouched, error, invalid } = fieldState;
-  const files = value;
+  const files = value ?? [];
 
   const onDrop = (newFiles, rejectedFiles, event) => {
     const updatedFiles = multiple ? [...files, ...newFiles] : [...newFiles];
 
-    if (multiple) {
-      onChange(updatedFiles);
-    } else {
-      onChange(updatedFiles[0]);
-    }
+    onChange(updatedFiles);
 
     if (onDropProp) {
       onDropProp(newFiles, rejectedFiles, event);
@@ -152,14 +177,10 @@ const FileInput = ({
         return;
       }
     }
-    if (multiple) {
-      const filteredFiles = files.filter(
-        (stateFile) => !shallowEqual(stateFile, file)
-      );
-      onChange(filteredFiles);
-    } else {
-      onChange(null);
-    }
+    const filteredFiles = files.filter(
+      (stateFile) => !shallowEqual(stateFile, file)
+    );
+    onChange(filteredFiles);
 
     if (onRemoveProp) {
       onRemoveProp(file);
@@ -176,9 +197,26 @@ const FileInput = ({
     maxSize,
     minSize,
     multiple,
+    maxFiles: count,
+    useFsAccessApi: false,
     ...options,
     onDrop,
   });
+
+  const handleFileUpdate = (file,newImage, croppedArea) => {
+    const filteredFiles = files.map(
+      (stateFile) => !shallowEqual(stateFile, file) ? file:
+      ({
+        ...file,
+        cropped: newImage,
+        croppedArea
+      })
+    );
+    onChange(filteredFiles);
+    setCropFile(null);
+  }
+
+  const [cropFile, setCropFile] = useState(null);
 
   return (
     <StyledLabeled
@@ -192,27 +230,29 @@ const FileInput = ({
       {...sanitizeInputRestProps(rest)}
     >
       <>
-        <div
-          {...getRootProps({
-            className: FileInputClasses.dropZone,
-            "data-testid": "dropzone",
-          })}
-        >
-          <input
-            id={id}
-            name={id}
-            {...getInputProps({
-              ...inputPropsOptions,
+        <Collapse in={Boolean(files.length < count)}>
+          <div
+            {...getRootProps({
+              className: FileInputClasses.dropZone,
+              "data-testid": "dropzone",
             })}
-          />
-          {placeholder ? (
-            placeholder
-          ) : multiple ? (
-            <p>{translate(labelMultiple)}</p>
-          ) : (
-            <p>{translate(labelSingle)}</p>
-          )}
-        </div>
+          >
+            <input
+              id={id}
+              name={id}
+              {...getInputProps({
+                ...inputPropsOptions,
+              })}
+            />
+            {placeholder ? (
+              placeholder
+            ) : multiple ? (
+              <p>{translate(labelMultiple)}</p>
+            ) : (
+              <p>{translate(labelSingle)}</p>
+            )}
+          </div>
+        </Collapse>
         <FormHelperText error={(isTouched || isSubmitted) && invalid}>
           <InputHelperText
             touched={isTouched || isSubmitted}
@@ -220,23 +260,32 @@ const FileInput = ({
             helperText={helperText}
           />
         </FormHelperText>
-        {children && (
-          <Grid container>
-            {files?.map((file, index) => (
-              <FileInputPreview
-                key={index}
-                file={file}
-                onRemove={onRemove(file)}
-                className={FileInputClasses.removeButton}
-                title={title}
-              >
-                {/* <RecordContextProvider value={record}>
+        <Grid container>
+          {files?.map((file, index) => (
+            <FileInputPreview
+              key={index}
+              file={file}
+              onRemove={onRemove(file)}
+              className={FileInputClasses.removeButton}
+              title={title}
+              showBar={true}
+              maxWidth={maxWidth}
+              maxHeight={maxHeight}
+              allowCrop={Boolean(file?.rawFile)}
+              onCrop={setCropFile}
+            >
+              {/* <RecordContextProvider value={record}>
                   {childrenElement}
                 </RecordContextProvider> */}
-              </FileInputPreview>
-            ))}
-          </Grid>
-        )}
+            </FileInputPreview>
+          ))}
+        </Grid>
+        <ImageCrop
+          image={cropFile?.thumbnail_path}
+          onClose={() => setCropFile(null)}
+          onCrop={(newImage, area) => handleFileUpdate(cropFile,newImage,area)}
+          area={cropFile?.croppedArea ?? undefined}
+        />
       </>
     </StyledLabeled>
   );

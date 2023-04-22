@@ -6,11 +6,30 @@ import RemoveCircle from "@mui/icons-material/RemoveCircle";
 import IconButton from "@mui/material/IconButton";
 import { useTranslate } from "ra-core";
 import get from "lodash/get";
-import { Box, Grid, Stack, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  ImageListItem,
+  ImageListItemBar,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 
-export const FileInputPreview = (props) => {
-  const { children, className, onRemove, file, title, ...rest } = props;
-
+export const FileInputPreview = ({
+  children,
+  className,
+  onRemove,
+  file,
+  title,
+  showBar = false,
+  allowCrop = false,
+  maxWidth=100,
+  maxHeight=100,
+  onCrop,
+  ...rest
+}) => {
   const translate = useTranslate();
   const hasThumbnail = file?.thumbnail_path !== null;
 
@@ -33,7 +52,7 @@ export const FileInputPreview = (props) => {
       {...rest}
       display="flex"
       style={{
-        maxWidth: 150,
+        maxWidth: maxWidth,
       }}
     >
       <Box display="flex">
@@ -53,25 +72,34 @@ export const FileInputPreview = (props) => {
             display="flex"
             flexDirection={"column"}
             style={{
-              maxWidth: 120,
+              maxWidth: maxWidth,
             }}
           >
-            <img
-              src={file.thumbnail_path}
-              alt={file.name}
-              style={{
-                maxWidth: 100,
-                maxHeight: 100,
-              }}
-            />
-            <Tooltip title={fileTitleValue}>
-              <Typography noWrap>{fileTitleValue}</Typography>
-            </Tooltip>
+            <ImageListItem>
+              <img
+                src={file.cropped ?? file.thumbnail_path}
+                alt={file.name}
+                style={{
+                  maxWidth: maxWidth,
+                  maxHeight: maxHeight,
+                }}
+                loading="lazy"
+              />
+              {showBar && <ImageListItemBar title={fileTitleValue} 
+              actionIcon={allowCrop && 
+              <IconButton
+              sx={{color:'rgba(255, 255, 255, 0.54)'}}
+              onClick={()=>onCrop && onCrop(file)}
+              >
+                <EditIcon/>
+              </IconButton>}/>}
+            </ImageListItem>
           </Box>
         ) : (
           fileTitleValue
         )}
       </Box>
+
     </Grid>
   );
 };

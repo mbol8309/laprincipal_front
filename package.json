@@ -31,6 +31,7 @@
     "react": "^18.2.0",
     "react-admin": "^4.8.1",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^4.7.4",
     "react-hook-form": "^7.43.9",
     "react-query": "^3.39.3",
     "react-scripts": "5.0.1",

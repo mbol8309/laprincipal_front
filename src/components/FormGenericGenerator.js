@@ -126,15 +126,11 @@ const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
                     download={true}
                     key={i.id}
                     count={i?.count ?? 1}
+                    filetype={i?.filetype ?? undefined}
                     label={i?.label ?? undefined}
+                    maxHeight={i?.maxHeight ?? undefined}
+                    maxWidth={i?.maxWidth ?? undefined}
                   >
-                    <FileField
-                    source={i.id}
-                    title="name"
-                    download={true}
-                    key={i.id}
-                    count={i?.count ?? 1}
-                    label={i?.label ?? undefined}/>
                   </FileInput>
                 );
 

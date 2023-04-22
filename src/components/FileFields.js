@@ -61,7 +61,6 @@ const FileField = ({
         {isSuccess && data.map((file, index) => {
           const fileTitleValue = get(file, title) || title;
           const srcValue = get(file, "path") || title;
-          const hasThumbnail = file?.thumbnail_path !== null;
           return (
             <li key={index}>
               <Link
