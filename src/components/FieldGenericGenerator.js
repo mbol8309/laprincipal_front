@@ -24,6 +24,7 @@ const FieldGenericGenerator = ({
   children,
   layout = null,
   options = {},
+  view='list'
 }) => {
   const View = useMemo(() => {
     if (layout !== null) return LayoutGenerator;
@@ -120,8 +121,9 @@ const FieldGenericGenerator = ({
 
   return (
     <View layout={layout ?? undefined} {...options}>
-      {fields &&
-        fields?.map((i) => {
+      {fields && fields
+      .filter(f=>f?.views.includes(view))
+      .map((i) => {
           return renderField(i);
         })}
       {children}

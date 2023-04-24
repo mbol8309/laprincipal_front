@@ -107,8 +107,15 @@ const genericDataProvider = {
         throw new HttpError(stringifyErrors(response?.data?.errors),  response.status, "some wierd error")
       });
   },
-  create: (resource, params) => {
+  create: async (resource, params) => {
     const { data, meta } = params;
+    if (data?.files){
+      //has files
+      let fileIds = await fileDataProvider.create('files',{
+        data:data.files
+      });
+      data.files = fileIds;
+    }
     return instance
       .post("insert", {
         model: resource,

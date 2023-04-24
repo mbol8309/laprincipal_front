@@ -63,7 +63,7 @@ const GenericShow = () => {
         <Show queryOptions={{
           meta: views?.show?.meta ?? undefined
         }}>
-          <FieldGenericGenerator type={views?.show?.type} fields={fields} layout={views?.show?.layout || views?.create?.layout || views?.edit?.layout}/>
+          <FieldGenericGenerator type={views?.show?.type} fields={fields} layout={views?.show?.layout || views?.create?.layout || views?.edit?.layout} view='show'/>
           {tabbedItems.length > 0 && (
             <TabbedShowLayout>
               {tabbedItems.map((tab) => (

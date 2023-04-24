@@ -76,13 +76,19 @@ const FileInput = ({
     error: errorData,
     refetch,
     isSuccess,
-  } = useGetList("file", {
-    filter: {
-      id: record.id,
-      function: source,
-      model: resource,
+  } = useGetList(
+    "file",
+    {
+      filter: {
+        id: record?.id,
+        function: source,
+        model: resource,
+      }
     },
-  });
+    {
+      enabled: record != null,
+    }
+  );
 
   const accept = useMemo(() => {
     //convert string like, image, document, excel, pdf or so to extensions
@@ -203,18 +209,19 @@ const FileInput = ({
     onDrop,
   });
 
-  const handleFileUpdate = (file,newImage, croppedArea) => {
-    const filteredFiles = files.map(
-      (stateFile) => !shallowEqual(stateFile, file) ? file:
-      ({
-        ...file,
-        cropped: newImage,
-        croppedArea
-      })
+  const handleFileUpdate = (file, newImage, croppedArea) => {
+    const filteredFiles = files.map((stateFile) =>
+      !shallowEqual(stateFile, file)
+        ? file
+        : {
+            ...file,
+            cropped: newImage,
+            croppedArea,
+          }
     );
     onChange(filteredFiles);
     setCropFile(null);
-  }
+  };
 
   const [cropFile, setCropFile] = useState(null);
 
@@ -283,7 +290,9 @@ const FileInput = ({
         <ImageCrop
           image={cropFile?.thumbnail_path}
           onClose={() => setCropFile(null)}
-          onCrop={(newImage, area) => handleFileUpdate(cropFile,newImage,area)}
+          onCrop={(newImage, area) =>
+            handleFileUpdate(cropFile, newImage, area)
+          }
           area={cropFile?.croppedArea ?? undefined}
         />
       </>

@@ -43,7 +43,8 @@ const GenericCreate = () => {
       <Fragment>
         <Button onClick={() => navigate(-1)} label="Back" />
         <Create>
-          <FormGenericGenerator fields={fields} type={views?.list?.type} layout={views?.create?.layout || views?.edit?.layout|| views?.show?.layout  } />
+          <FormGenericGenerator fields={fields} type={views?.list?.type} layout={views?.create?.layout || views?.edit?.layout|| views?.show?.layout  } 
+          view='create'/>
         </Create>
       </Fragment>
     );

@@ -14,7 +14,7 @@ import FormLayoutGenerator from "./FormLayoutGenerator";
 import FileInput from "./FileInput";
 import FileField from "./FileFields";
 
-const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
+const FormGenericGenerator = ({ fields, type, view='edit', onSubmit, layout=null }) => {
   const View = useMemo(() => {
     if (layout !== null) return FormLayoutGenerator;
     if (type === "simple") return SimpleForm;
@@ -24,7 +24,7 @@ const FormGenericGenerator = ({ fields, type, onSubmit, layout=null }) => {
   return (
     <View onSubmit={onSubmit ?? undefined} layout={layout ?? undefined}>
       {fields &&
-        fields?.map((i) => {
+        fields?.filter(f=>f?.views?.includes(view)).map((i) => {
           switch (i.type) {
             case "textfield":
               return (
